@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE SYSTEM - Solo Leveling Real Life</title>
+    <title>THE SYSTEM - Solo Leveling V2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -15,6 +15,7 @@
             --sl-panel: #161b22;
             --sl-red: #ff3333;
             --sl-gold: #ffd700;
+            --sl-purple: #b026ff;
         }
 
         body {
@@ -25,7 +26,6 @@
             background-image: radial-gradient(circle at center, #111 0%, #000 100%);
         }
 
-        /* UI Styles imitating the Manhwa */
         .system-panel {
             background: rgba(13, 17, 23, 0.95);
             border: 1px solid #30363d;
@@ -56,18 +56,6 @@
             color: var(--sl-glow);
             text-shadow: 0 0 5px var(--sl-glow);
         }
-        
-        .crit-text {
-            color: var(--sl-gold);
-            text-shadow: 0 0 5px var(--sl-gold);
-            animation: pulse-gold 1s infinite;
-        }
-
-        @keyframes pulse-gold {
-            0% { text-shadow: 0 0 5px var(--sl-gold); }
-            50% { text-shadow: 0 0 20px var(--sl-gold); transform: scale(1.05); }
-            100% { text-shadow: 0 0 5px var(--sl-gold); }
-        }
 
         .btn-system {
             background: transparent;
@@ -91,15 +79,20 @@
             cursor: not-allowed;
         }
 
-        /* Penalty Mode */
+        /* Quest Segreta */
+        .hidden-quest-panel {
+            border-color: var(--sl-purple) !important;
+            box-shadow: 0 0 15px rgba(176, 38, 255, 0.2) !important;
+        }
+        .hidden-quest-header {
+            color: var(--sl-purple) !important;
+            text-shadow: 0 0 10px var(--sl-purple) !important;
+            border-bottom-color: var(--sl-purple) !important;
+        }
+
         .penalty-mode {
             border-color: var(--sl-red) !important;
             box-shadow: 0 0 20px rgba(255, 51, 51, 0.3) !important;
-        }
-        .penalty-mode .system-header, .penalty-mode .glow-text, .penalty-mode .btn-system {
-            color: var(--sl-red) !important;
-            text-shadow: 0 0 5px var(--sl-red) !important;
-            border-color: var(--sl-red);
         }
         .penalty-overlay {
             position: fixed;
@@ -112,7 +105,6 @@
             flex-direction: column;
         }
 
-        /* Modal */
         .modal-overlay {
             background: rgba(0, 0, 0, 0.8);
             position: fixed;
@@ -120,7 +112,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 40;
+            z-index: 60;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.3s;
@@ -129,7 +121,6 @@
             opacity: 1;
             pointer-events: all;
         }
-
         .system-alert {
             border: 2px solid var(--sl-glow);
             background: rgba(0, 10, 20, 0.95);
@@ -140,21 +131,65 @@
             box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
         }
 
-        .hidden { display: none; }
-        
-        .stat-desc { font-size: 0.65rem; color: #666; display: block; margin-top: -2px; }
+        #toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+        .toast {
+            background: rgba(13, 17, 23, 0.9);
+            border: 1px solid var(--sl-blue);
+            color: white;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+            animation: slideIn 0.3s ease forwards;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .hidden { display: none !important; }
+        .stat-desc { font-size: 0.65rem; color: #888; display: block; margin-top: -2px; }
     </style>
 </head>
 <body class="p-4 md:p-8 min-h-screen flex flex-col items-center">
 
+    <div id="toast-container"></div>
+
     <audio id="sfx-level-up" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
     <audio id="sfx-click" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
-    <audio id="sfx-alert" src="https://assets.mixkit.co/active_storage/sfx/995/995-preview.mp3"></audio>
     <audio id="sfx-crit" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"></audio>
 
-    <!-- Header / Status Summary -->
+    <!-- Top Navigation / Settings -->
+    <div class="w-full max-w-2xl flex justify-between items-center mb-4 text-xs text-gray-400">
+        <div>
+            <button onclick="toggleSettings()" class="hover:text-blue-400 border border-gray-700 px-2 py-1 rounded"><i class="fas fa-cog"></i> Sistema</button>
+        </div>
+        <div id="notification-status">
+            <button onclick="enableNotifications()" class="hover:text-blue-400 border border-gray-700 px-2 py-1 rounded"><i class="fas fa-bell"></i> Attiva Avvisi</button>
+        </div>
+    </div>
+
+    <!-- Settings Panel (Hidden by default) -->
+    <div id="settings-panel" class="w-full max-w-2xl system-panel p-4 mb-4 hidden">
+        <h2 class="text-lg text-blue-400 border-b border-gray-700 mb-4 pb-2">Gestione Dati Sistema</h2>
+        <div class="flex flex-col gap-4">
+            <button onclick="exportData()" class="btn-system py-2 text-sm"><i class="fas fa-download"></i> Esporta Backup Dati</button>
+            <div class="relative">
+                <input type="file" id="import-file" accept=".json" class="hidden" onchange="importData(event)">
+                <button onclick="document.getElementById('import-file').click()" class="btn-system py-2 text-sm w-full border-yellow-500 text-yellow-500 hover:bg-yellow-900"><i class="fas fa-upload"></i> Importa Salvataggio</button>
+            </div>
+            <p class="text-xs text-gray-500 text-center">Usa queste opzioni per non perdere i progressi se cambi browser o pulisci la cache.</p>
+        </div>
+    </div>
+
     <div id="main-container" class="w-full max-w-2xl transition-all duration-500">
         
+        <!-- Status Panel -->
         <div class="system-panel p-4 mb-6 relative">
             <h1 class="text-2xl font-bold tracking-widest text-center text-blue-400 mb-2">STATUS UTENTE</h1>
             
@@ -165,12 +200,12 @@
                 </div>
                 <div class="text-right">
                     <div class="text-gray-400 text-sm">TITOLO</div>
-                    <div class="text-sm font-bold text-yellow-500" id="player-title">Schiappa (E-Rank)</div>
+                    <div class="text-sm font-bold text-yellow-500" id="player-title">Cacciatore (C-Rank)</div>
                 </div>
             </div>
 
             <div class="flex items-end gap-2 mb-1">
-                <span class="text-4xl font-bold text-white">LV. <span id="level-display" class="glow-text">1</span></span>
+                <span class="text-4xl font-bold text-white">LV. <span id="level-display" class="glow-text">10</span></span>
             </div>
 
             <!-- XP Bar -->
@@ -181,44 +216,40 @@
 
             <!-- Stats Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 text-sm">
-                <!-- FORZA -->
                 <div class="stat-row">
                     <div>
                         <span class="text-gray-300 font-bold block">FORZA (STR)</span>
-                        <span class="stat-desc">Sblocca Piegamenti/Addominali Avanzati</span>
+                        <span class="stat-desc">Difficoltà Piegamenti / Core</span>
                     </div>
                     <div class="flex items-center gap-2">
                         <span id="str-val" class="font-bold text-lg text-blue-300">10</span>
                         <button onclick="addStat('str')" class="stat-btn hidden text-yellow-400 hover:text-yellow-200 text-xl"><i class="fas fa-plus-square"></i></button>
                     </div>
                 </div>
-                <!-- AGILITA -->
                 <div class="stat-row">
                     <div>
                         <span class="text-gray-300 font-bold block">AGILITÀ (AGI)</span>
-                        <span class="stat-desc">Sblocca Gambe/Cardio Avanzati</span>
+                        <span class="stat-desc">Difficoltà Gambe (Glute-Safe)</span>
                     </div>
                     <div class="flex items-center gap-2">
                         <span id="agi-val" class="font-bold text-lg text-blue-300">10</span>
                         <button onclick="addStat('agi')" class="stat-btn hidden text-yellow-400 hover:text-yellow-200 text-xl"><i class="fas fa-plus-square"></i></button>
                     </div>
                 </div>
-                <!-- VITALITA -->
                 <div class="stat-row">
                     <div>
                         <span class="text-gray-300 font-bold block">VITALITÀ (VIT)</span>
-                        <span class="stat-desc">Aumenta resistenza muscolare</span>
+                        <span class="stat-desc">Cardio / Resistenza</span>
                     </div>
                     <div class="flex items-center gap-2">
                         <span id="vit-val" class="font-bold text-lg text-blue-300">10</span>
                         <button onclick="addStat('vit')" class="stat-btn hidden text-yellow-400 hover:text-yellow-200 text-xl"><i class="fas fa-plus-square"></i></button>
                     </div>
                 </div>
-                <!-- SENSO -->
                 <div class="stat-row">
                     <div>
                         <span class="text-gray-300 font-bold block">SENSO (SEN)</span>
-                        <span class="stat-desc">% Critico (Doppia XP) & Tecnica</span>
+                        <span class="stat-desc">% Critico / Bonus Reali</span>
                     </div>
                     <div class="flex items-center gap-2">
                         <span id="sen-val" class="font-bold text-lg text-blue-300">10</span>
@@ -234,14 +265,27 @@
             </div>
         </div>
 
-        <!-- Quest Section -->
+        <!-- Hidden Quest Section (Appears Randomly) -->
+        <div id="bonus-quest-panel" class="system-panel p-4 mb-6 hidden-quest-panel hidden">
+            <div class="system-header hidden-quest-header flex justify-between items-center text-sm">
+                <span><i class="fas fa-exclamation-triangle"></i> QUEST DI EMERGENZA (VITA REALE)</span>
+                <span class="text-xs bg-purple-900 px-2 py-1 rounded text-white">BONUS EXP</span>
+            </div>
+            <p id="bonus-quest-desc" class="text-lg font-bold text-white mb-4 text-center">Fai 3 piani di scale invece dell'ascensore.</p>
+            <div class="flex justify-center">
+                <button id="btn-bonus-complete" onclick="completeBonusQuest()" class="px-6 py-2 border border-purple-500 text-purple-400 hover:bg-purple-900 rounded font-bold transition-colors">
+                    <i class="fas fa-check"></i> FATTO
+                </button>
+            </div>
+        </div>
+
+        <!-- Daily Quest Section -->
         <div id="quest-panel" class="system-panel p-6">
             <div class="system-header flex justify-between items-center">
                 <span>QUEST GIORNALIERA</span>
-                <span class="text-xs bg-blue-900 px-2 py-1 rounded text-white" id="quest-difficulty">GRADO E</span>
             </div>
 
-            <div class="space-y-6" id="quest-list">
+            <div class="space-y-4" id="quest-list">
                 <!-- Populated by JS -->
             </div>
 
@@ -249,12 +293,12 @@
                 <button id="complete-quest-btn" onclick="finishDailyQuest()" class="btn-system w-full py-4 text-xl tracking-widest" disabled>
                     COMPLETA QUEST
                 </button>
-                <div class="text-xs text-gray-500 mt-2">Le stat determinano la difficoltà degli esercizi.</div>
+                <div class="text-xs text-gray-500 mt-2">La progressione è rallentata. Esercizi mirati a proteggere la zona lombare.</div>
             </div>
             
             <div id="quest-completed-msg" class="hidden text-center py-4">
                 <h3 class="text-2xl text-green-400 font-bold mb-2">QUEST COMPLETATA</h3>
-                <p class="text-gray-400">Torna domani per un nuovo allenamento.</p>
+                <p class="text-gray-400">Riposo. Il corpo si sta adattando.</p>
                 <div class="mt-4 text-sm text-blue-300" id="countdown"></div>
             </div>
         </div>
@@ -264,10 +308,10 @@
     <div id="penalty-overlay" class="hidden penalty-overlay">
         <div class="system-panel p-8 max-w-lg w-full border-red-600 text-center penalty-mode animate-pulse">
             <h1 class="text-4xl font-bold text-red-600 mb-4">PENALITÀ ATTIVA</h1>
-            <p class="text-white mb-6">Non hai completato la quest giornaliera.</p>
+            <p class="text-white mb-6">Non hai completato l'addestramento. Trasferimento in Zona Sopravvivenza.</p>
             <div class="bg-red-900/20 p-4 border border-red-600 mb-6">
                 <h3 class="text-xl font-bold text-red-500 mb-2">SOPRAVVIVENZA</h3>
-                <p class="text-lg text-white mb-4">Plank della Morte</p>
+                <p class="text-lg text-white mb-4">Wall Sit (Muro) della Morte</p>
                 <div class="text-5xl font-mono text-red-500 my-4" id="penalty-timer">00:00</div>
             </div>
             <button onclick="startPenaltyTimer()" id="start-penalty-btn" class="btn-system w-full py-3 border-red-600 text-red-500 hover:bg-red-600 hover:text-black">
@@ -281,7 +325,7 @@
         <div class="system-alert transform scale-95 transition-transform duration-200">
             <h2 class="text-2xl font-bold text-blue-400 mb-4 tracking-widest">QUEST COMPLETATA</h2>
             <div id="crit-badge" class="hidden mb-2 text-yellow-400 font-bold border border-yellow-400 inline-block px-2 rounded">
-                CRITICO! (Tecnica Perfetta)
+                SINERGIA PERFETTA (Doppia XP)
             </div>
             <div class="space-y-2 text-left mb-6">
                 <div class="flex justify-between border-b border-gray-700 py-2">
@@ -301,108 +345,180 @@
         </div>
     </div>
 
-    <div class="fixed bottom-2 right-2 text-xs text-gray-600">
-        <button onclick="hardReset()" class="hover:text-red-500">Reset System</button>
-    </div>
-
     <script>
-        // --- EVOLUTION SYSTEM ---
+        // --- GRADUAL & GLUTE-SAFE EXERCISE DB ---
+        // Increments (inc) are much smaller. Requirements (reqVal) are much higher.
         const EXERCISE_TIERS = {
             pushups: [
-                { name: "Piegamenti Ginocchia", reqStat: "str", reqVal: 0, base: 10, inc: 1 },
-                { name: "Piegamenti Classici", reqStat: "str", reqVal: 15, base: 10, inc: 2 },
-                { name: "Piegamenti Diamante", reqStat: "str", reqVal: 30, base: 8, inc: 2 },
-                { name: "Piegamenti Arciere", reqStat: "str", reqVal: 50, base: 6, inc: 1 },
-                { name: "Piegamenti su 1 Mano", reqStat: "str", reqVal: 80, base: 5, inc: 1 }
+                { name: "Piegamenti (Muro/Ginocchia)", reqStat: "str", reqVal: 0, base: 10, inc: 0.2 },
+                { name: "Piegamenti Classici", reqStat: "str", reqVal: 60, base: 10, inc: 0.3 }, // Sblocco spostato a 60
+                { name: "Piegamenti a Diamante", reqStat: "str", reqVal: 120, base: 8, inc: 0.2 },
+                { name: "Piegamenti Declinati", reqStat: "str", reqVal: 180, base: 8, inc: 0.2 }
             ],
-            squats: [
-                { name: "Ma Bu (Posizione Cavallo)", reqStat: "agi", reqVal: 0, base: 20, inc: 5, unit: "sec" },
-                { name: "Squat Classici", reqStat: "agi", reqVal: 15, base: 20, inc: 3, unit: "reps" },
-                { name: "Affondi Jump", reqStat: "agi", reqVal: 30, base: 15, inc: 2, unit: "reps" },
-                { name: "Pistol Squat (Assistiti)", reqStat: "agi", reqVal: 50, base: 5, inc: 1, unit: "reps" },
-                { name: "Pistol Squat (Full)", reqStat: "agi", reqVal: 80, base: 5, inc: 1, unit: "reps" }
+            squats: [ // Riscritto per scaricare la zona lombare e i glutei
+                { name: "Wall Sit (Sedia al Muro)", reqStat: "agi", reqVal: 0, base: 30, inc: 2, unit: "sec" },
+                { name: "Calf Raises (Polpacci)", reqStat: "agi", reqVal: 50, base: 20, inc: 0.5, unit: "reps" },
+                { name: "Step-Up (Gradino basso)", reqStat: "agi", reqVal: 100, base: 10, inc: 0.2, unit: "reps x gamba" },
+                { name: "Wall Sit 1 Gamba (Muro)", reqStat: "agi", reqVal: 150, base: 20, inc: 1, unit: "sec x gamba" }
             ],
-            situps: [
-                { name: "Crunch Semplici", reqStat: "str", reqVal: 0, base: 15, inc: 2 },
-                { name: "Leg Raises (Sdraiato)", reqStat: "str", reqVal: 15, base: 10, inc: 2 },
-                { name: "V-Ups", reqStat: "str", reqVal: 30, base: 10, inc: 1 },
-                { name: "Hollow Body Hold", reqStat: "str", reqVal: 45, base: 30, inc: 5, unit: "sec" },
-                { name: "L-Sit Hold", reqStat: "str", reqVal: 70, base: 10, inc: 2, unit: "sec" }
+            situps: [ // Riscritto per proteggere lo psoas e la schiena
+                { name: "Crunch Brevi (Spalle alzate)", reqStat: "str", reqVal: 0, base: 15, inc: 0.3 },
+                { name: "Plank sui Gomiti", reqStat: "str", reqVal: 40, base: 30, inc: 1, unit: "sec" },
+                { name: "Dead Bug (Insetto Morto)", reqStat: "str", reqVal: 90, base: 10, inc: 0.3, unit: "reps" },
+                { name: "Hollow Body (Ginocchia piegate)", reqStat: "str", reqVal: 140, base: 20, inc: 1, unit: "sec" }
             ],
             cardio: [
-                { name: "Shadow Boxing (Lento)", reqStat: "vit", reqVal: 0, base: 1, inc: 0.1, unit: "min" },
-                { name: "Shadow Boxing (Medio)", reqStat: "vit", reqVal: 15, base: 2, inc: 0.2, unit: "min" },
-                { name: "Burpees", reqStat: "vit", reqVal: 30, base: 10, inc: 2, unit: "reps" },
-                { name: "Shadow Boxing (Veloce)", reqStat: "vit", reqVal: 50, base: 3, inc: 0.3, unit: "min" }
+                { name: "Shadow Boxing Leggero", reqStat: "vit", reqVal: 0, base: 1, inc: 0.05, unit: "min" },
+                { name: "Corda (o simulata a vuoto)", reqStat: "vit", reqVal: 60, base: 2, inc: 0.1, unit: "min" },
+                { name: "Shadow Boxing Intenso", reqStat: "vit", reqVal: 120, base: 3, inc: 0.1, unit: "min" }
             ],
             flexibility: [
-                { name: "Stretching Base", reqStat: "sen", reqVal: 0, base: 5, inc: 0, unit: "min" },
-                { name: "Stretching Dinamico", reqStat: "sen", reqVal: 20, base: 7, inc: 0, unit: "min" },
-                { name: "Yoga Flow", reqStat: "sen", reqVal: 40, base: 10, inc: 0, unit: "min" }
+                { name: "Stretching Schiena & Gatto", reqStat: "sen", reqVal: 0, base: 5, inc: 0, unit: "min" },
+                { name: "Mobilità Articolare Totale", reqStat: "sen", reqVal: 80, base: 7, inc: 0, unit: "min" }
             ]
         };
 
+        const BONUS_MISSIONS = [
+            "Fai almeno 3 piani di scale invece dell'ascensore oggi.",
+            "Bevi 2 bicchieri d'acqua appena sveglio o ora.",
+            "Cammina per 15 minuti senza guardare il telefono.",
+            "Fai 10 respiri profondi (Inspira 4s, Tieni 4s, Espira 4s).",
+            "Mettiti dritto e correggi la postura per i prossimi 10 minuti.",
+            "Stai in equilibrio su una gamba sola per 1 minuto (poi cambia gamba).",
+            "Riordina una stanza/postazione per 5 minuti esatti."
+        ];
+
         const ICONS = {
-            pushups: "fa-fist-raised",
-            squats: "fa-street-view",
-            situps: "fa-dumbbell",
-            cardio: "fa-running",
-            flexibility: "fa-yin-yang"
+            pushups: "fa-fist-raised", squats: "fa-chair", situps: "fa-shield-alt", 
+            cardio: "fa-running", flexibility: "fa-yin-yang"
         };
         
-        // --- STATE ---
+        // --- STATE & INITIALIZATION ---
+        // Setting defaults close to User's request in case they don't import
         let player = {
             name: "Giocatore",
-            level: 1,
-            xp: 0,
-            xpToNext: 100,
+            level: 1, xp: 0, xpToNext: 100,
             stats: { str: 10, agi: 10, vit: 10, sen: 10 },
-            statPoints: 0,
-            penaltyActive: false
+            statPoints: 0, penaltyActive: false
         };
 
         let dailyProgress = {
-            date: null,
-            completed: false,
-            exercises: {} 
+            date: null, completed: false,
+            exercises: {}, bonusQuest: null
         };
 
-        // --- AUDIO ---
         const sfxClick = document.getElementById('sfx-click');
         const sfxLevelUp = document.getElementById('sfx-level-up');
-        const sfxAlert = document.getElementById('sfx-alert');
         const sfxCrit = document.getElementById('sfx-crit');
 
-        function playSound(sound) {
-            sound.currentTime = 0;
-            sound.play().catch(e => {});
+        function playSound(sound) { sound.currentTime = 0; sound.play().catch(e => {}); }
+
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<i class="fas fa-info-circle mr-2 text-blue-400"></i> ${message}`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 4000);
         }
 
-        // --- INIT ---
         function init() {
             loadData();
             checkDateLogic();
             renderUI();
             startCountdownClock();
+            checkNotificationStatus();
         }
 
+        function toggleSettings() {
+            const panel = document.getElementById('settings-panel');
+            panel.classList.toggle('hidden');
+        }
+
+        // --- DATA MANAGEMENT (SAVE/LOAD/EXPORT) ---
         function loadData() {
-            const savedPlayer = localStorage.getItem('sl_player');
-            const savedDaily = localStorage.getItem('sl_daily');
-            if (savedPlayer) player = JSON.parse(savedPlayer);
+            const savedPlayer = localStorage.getItem('sl_v2_player');
+            const savedDaily = localStorage.getItem('sl_v2_daily');
+            
+            if (savedPlayer) {
+                player = JSON.parse(savedPlayer);
+            } else {
+                // If NO data exists, initialize with User's Level 10 stats automatically!
+                player = {
+                    name: "Giocatore", level: 10, xp: 34, xpToNext: 511,
+                    stats: { str: 53, agi: 33, vit: 38, sen: 33 },
+                    statPoints: 0, penaltyActive: false
+                };
+            }
             if (savedDaily) dailyProgress = JSON.parse(savedDaily);
-            if (!player.stats) player.stats = { str: 10, agi: 10, vit: 10, sen: 10 };
         }
 
         function saveData() {
-            localStorage.setItem('sl_player', JSON.stringify(player));
-            localStorage.setItem('sl_daily', JSON.stringify(dailyProgress));
+            localStorage.setItem('sl_v2_player', JSON.stringify(player));
+            localStorage.setItem('sl_v2_daily', JSON.stringify(dailyProgress));
         }
 
-        function hardReset() {
-            if(confirm("Reset Totale del Sistema?")) {
-                localStorage.clear();
-                location.reload();
+        function exportData() {
+            const data = { player, dailyProgress };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "the_system_backup.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+            showToast("Backup scaricato con successo.");
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data.player && data.player.level) {
+                        player = data.player;
+                        if(data.dailyProgress) dailyProgress = data.dailyProgress;
+                        saveData();
+                        showToast("Dati sincronizzati col Sistema.");
+                        setTimeout(() => location.reload(), 1500);
+                    } else {
+                        showToast("File di salvataggio non valido.");
+                    }
+                } catch (err) {
+                    showToast("Errore durante la lettura del file.");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // --- NOTIFICATIONS ---
+        function checkNotificationStatus() {
+            if (!("Notification" in window)) {
+                document.getElementById('notification-status').innerHTML = "<span class='text-red-500'><i class='fas fa-ban'></i> Avvisi Non Supportati</span>";
+            } else if (Notification.permission === "granted") {
+                document.getElementById('notification-status').innerHTML = "<span class='text-green-500'><i class='fas fa-bell'></i> Avvisi Attivi</span>";
+            }
+        }
+
+        function enableNotifications() {
+            if (!("Notification" in window)) {
+                showToast("Il tuo browser non supporta le notifiche.");
+                return;
+            }
+            Notification.requestPermission().then(permission => {
+                if (permission === "granted") {
+                    showToast("Notifiche attivate! Riceverai avvisi di sistema.");
+                    new Notification("IL SISTEMA", { body: "Canale di comunicazione stabilito." });
+                    checkNotificationStatus();
+                }
+            });
+        }
+
+        function sendSystemNotification(title, body) {
+            if ("Notification" in window && Notification.permission === "granted") {
+                new Notification(title, { body: body });
             }
         }
 
@@ -417,6 +533,7 @@
             if (dailyProgress.date !== today) {
                 if (!dailyProgress.completed && !player.penaltyActive) {
                     player.penaltyActive = true;
+                    sendSystemNotification("PENALITÀ", "Non hai completato la quest. Zona Sopravvivenza attiva.");
                 }
                 dailyProgress.date = today;
                 dailyProgress.completed = false;
@@ -425,65 +542,57 @@
             }
         }
 
-        // --- NEW: EVOLVING QUEST GENERATION ---
         function getBestExerciseTier(type) {
             const variants = EXERCISE_TIERS[type];
-            // Iterate backwards to find highest unlocked tier
             for (let i = variants.length - 1; i >= 0; i--) {
-                const variant = variants[i];
-                const playerStat = player.stats[variant.reqStat];
-                if (playerStat >= variant.reqVal) {
-                    return variant;
-                }
+                if (player.stats[variants[i].reqStat] >= variants[i].reqVal) return variants[i];
             }
-            return variants[0]; // Fallback
+            return variants[0];
         }
 
         function generateDailyQuest() {
             dailyProgress.exercises = {};
             
+            // Generate standard physical quest
             for (let type in EXERCISE_TIERS) {
                 const variant = getBestExerciseTier(type);
-                
-                // Calculate quantity based on Level but also reduced by Tier difficulty (optional)
-                // We simply use the base + inc formula from the specific Tier
-                let quantity = Math.ceil(variant.base + ((player.level - 1) * variant.inc));
-                
+                // Math.floor to ensure integers. Very slow growth using variant.inc
+                let quantity = Math.floor(variant.base + ((player.level - 1) * variant.inc)); 
                 dailyProgress.exercises[type] = {
-                    name: variant.name,
-                    target: quantity,
-                    current: 0,
-                    unit: variant.unit || "reps",
-                    done: false
+                    name: variant.name, target: quantity, current: 0,
+                    unit: variant.unit || "reps", done: false
                 };
+            }
+
+            // Generate Bonus Real Life Quest (35% chance)
+            if (Math.random() < 0.35) {
+                const randomQuest = BONUS_MISSIONS[Math.floor(Math.random() * BONUS_MISSIONS.length)];
+                dailyProgress.bonusQuest = { text: randomQuest, done: false };
+            } else {
+                dailyProgress.bonusQuest = null;
             }
         }
 
         // --- UI ---
         function renderUI() {
-            // Stats
             document.getElementById('level-display').innerText = player.level;
             document.getElementById('str-val').innerText = player.stats.str;
             document.getElementById('agi-val').innerText = player.stats.agi;
             document.getElementById('vit-val').innerText = player.stats.vit;
             document.getElementById('sen-val').innerText = player.stats.sen;
             
-            // XP
             const xpPercent = Math.min(100, (player.xp / player.xpToNext) * 100);
             document.getElementById('xp-bar').style.width = `${xpPercent}%`;
             document.getElementById('xp-text').innerText = `${Math.floor(player.xp)} / ${player.xpToNext}`;
 
-            // Title
             const titleEl = document.getElementById('player-title');
-            if (player.level < 10) titleEl.innerText = "Schiappa (E-Rank)";
-            else if (player.level < 20) titleEl.innerText = "Principiante (D-Rank)";
-            else if (player.level < 40) titleEl.innerText = "Combattente (C-Rank)";
+            if (player.level < 15) titleEl.innerText = "Principiante (D-Rank)";
+            else if (player.level < 30) titleEl.innerText = "Cacciatore (C-Rank)";
+            else if (player.level < 50) titleEl.innerText = "Elite (B-Rank)";
             else titleEl.innerText = "Monarca (S-Rank)";
 
-            // Points
             const ptsContainer = document.getElementById('stat-points-container');
             const statBtns = document.querySelectorAll('.stat-btn');
-            
             if (player.statPoints > 0) {
                 ptsContainer.classList.remove('hidden');
                 document.getElementById('stat-points').innerText = player.statPoints;
@@ -493,11 +602,20 @@
                 statBtns.forEach(btn => btn.classList.add('hidden'));
             }
 
-            // Views
             if (player.penaltyActive) {
                 document.getElementById('penalty-overlay').classList.remove('hidden');
             } else {
                 document.getElementById('penalty-overlay').classList.add('hidden');
+                
+                // Bonus Quest UI
+                const bonusPanel = document.getElementById('bonus-quest-panel');
+                if (dailyProgress.bonusQuest && !dailyProgress.bonusQuest.done && !dailyProgress.completed) {
+                    bonusPanel.classList.remove('hidden');
+                    document.getElementById('bonus-quest-desc').innerText = dailyProgress.bonusQuest.text;
+                } else {
+                    bonusPanel.classList.add('hidden');
+                }
+
                 if (dailyProgress.completed) {
                     document.getElementById('quest-list').classList.add('hidden');
                     document.getElementById('quest-status-area').classList.add('hidden');
@@ -519,9 +637,8 @@
             for (let key in dailyProgress.exercises) {
                 const data = dailyProgress.exercises[key];
                 if (!data.done) allDone = false;
-
                 const percent = Math.min(100, (data.current / data.target) * 100);
-                const iconClass = ICONS[key] || "fa-dumbbell";
+                const iconClass = ICONS[key];
                 
                 const item = document.createElement('div');
                 item.className = "bg-gray-800 bg-opacity-50 p-3 border border-gray-700 rounded relative overflow-hidden";
@@ -530,22 +647,19 @@
                         <div class="flex items-center gap-3">
                             <i class="fas ${iconClass} text-blue-400 w-6 text-center"></i>
                             <div>
-                                <span class="font-semibold text-gray-200 block text-lg">${data.name}</span>
-                                <span class="text-xs text-gray-500 uppercase">${key}</span>
+                                <span class="font-semibold text-gray-200 block text-md md:text-lg leading-tight">${data.name}</span>
                             </div>
                         </div>
-                        <span class="text-blue-300 font-mono text-xl">${data.current} / ${data.target} <span class="text-xs">${data.unit}</span></span>
+                        <span class="text-blue-300 font-mono text-lg whitespace-nowrap ml-2">${data.current} / ${data.target} <span class="text-xs">${data.unit}</span></span>
                     </div>
-                    
                     <div class="absolute bottom-0 left-0 h-1 bg-gray-700 w-full z-0">
                         <div class="h-full bg-blue-500 transition-all duration-300" style="width: ${percent}%"></div>
                     </div>
-
                     <div class="flex gap-2 mt-2 relative z-10 justify-end">
                         <button onclick="updateExercise('${key}', -1)" class="px-3 py-1 border border-gray-600 rounded hover:bg-gray-700">-</button>
                         <button onclick="updateExercise('${key}', 1)" class="px-3 py-1 border border-gray-600 rounded hover:bg-gray-700">+1</button>
                         <button onclick="updateExercise('${key}', 5)" class="px-3 py-1 border border-gray-600 rounded hover:bg-gray-700">+5</button>
-                         <button onclick="updateExercise('${key}', ${data.target})" class="px-3 py-1 border border-blue-600 text-blue-400 rounded hover:bg-blue-900 ml-2"><i class="fas fa-check"></i></button>
+                        <button onclick="updateExercise('${key}', ${data.target})" class="px-3 py-1 border border-blue-600 text-blue-400 rounded hover:bg-blue-900 ml-2"><i class="fas fa-check"></i></button>
                     </div>
                 `;
                 list.appendChild(item);
@@ -574,22 +688,31 @@
             if (data.current >= data.target) {
                 data.current = data.target;
                 data.done = true;
-            } else {
-                data.done = false;
-            }
+            } else data.done = false;
+            
             saveData();
             renderUI();
+        }
+
+        function completeBonusQuest() {
+            playSound(sfxClick);
+            if(dailyProgress.bonusQuest) {
+                dailyProgress.bonusQuest.done = true;
+                const bonusXp = Math.floor(15 + (player.level * 2));
+                player.xp += bonusXp;
+                showToast(`Quest Nascosta completata! +${bonusXp} XP`);
+                saveData();
+                renderUI();
+            }
         }
 
         function finishDailyQuest() {
             dailyProgress.completed = true;
             
-            // --- SENSE / CRIT LOGIC ---
-            // Base chance 5%, +0.5% per point of SEN
             const critChance = 5 + (player.stats.sen * 0.5);
             const isCrit = Math.random() * 100 < critChance;
             
-            let xpGain = Math.floor(20 + (player.level * 10)); // Base XP
+            let xpGain = Math.floor(20 + (player.level * 8)); // Scaled down slightly for balance
             if (isCrit) {
                 xpGain *= 2;
                 playSound(sfxCrit);
@@ -602,15 +725,12 @@
             player.xp += xpGain;
             player.statPoints += 3;
             
-            // Level Up
             if (player.xp >= player.xpToNext) {
                 player.level++;
                 player.xp -= player.xpToNext;
-                player.xpToNext = Math.floor(player.xpToNext * 1.2);
-                player.stats.str++; 
-                player.stats.agi++;
-                player.stats.vit++;
-                player.stats.sen++;
+                player.xpToNext = Math.floor(player.xpToNext * 1.25);
+                player.stats.str++; player.stats.agi++;
+                player.stats.vit++; player.stats.sen++;
             }
 
             saveData();
@@ -622,7 +742,7 @@
 
         function closeModal() {
             document.getElementById('reward-modal').classList.remove('active');
-            location.reload(); // Refresh to update quest names if leveled up stats
+            location.reload(); 
         }
 
         function addStat(stat) {
@@ -647,10 +767,11 @@
                 timerEl.innerText = `${m}:${s}`;
                 if(penaltySeconds<=0) {
                     clearInterval(interval);
-                    alert("PENALITÀ COMPLETATA.");
+                    sendSystemNotification("PENALITÀ COMPLETATA", "Puoi tornare alla dashboard principale.");
+                    showToast("Sopravvivenza Completata.");
                     player.penaltyActive = false;
                     saveData();
-                    location.reload();
+                    setTimeout(() => location.reload(), 2000);
                 }
             }, 1000);
         }
@@ -664,7 +785,8 @@
                 const diff = tomorrow - now;
                 const h = Math.floor(diff/(1000*60*60));
                 const m = Math.floor((diff%(1000*60*60))/(1000*60));
-                document.getElementById('countdown').innerText = `Prossima Quest: ${h}h ${m}m`;
+                const el = document.getElementById('countdown');
+                if(el) el.innerText = `Prossima Quest: ${h}h ${m}m`;
             }, 60000);
         }
 
