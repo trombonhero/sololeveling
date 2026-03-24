@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE SYSTEM - Solo Leveling V2</title>
+    <title>THE SYSTEM - V3 Rehab</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -97,7 +97,7 @@
         .penalty-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(50, 0, 0, 0.9);
+            background: rgba(20, 0, 0, 0.95);
             z-index: 50;
             display: flex;
             justify-content: center;
@@ -293,7 +293,7 @@
                 <button id="complete-quest-btn" onclick="finishDailyQuest()" class="btn-system w-full py-4 text-xl tracking-widest" disabled>
                     COMPLETA QUEST
                 </button>
-                <div class="text-xs text-gray-500 mt-2">La progressione è rallentata. Esercizi mirati a proteggere la zona lombare.</div>
+                <div class="text-xs text-gray-500 mt-2">La costanza batte l'intensità. Fai anche solo il minimo per mantenere l'abitudine.</div>
             </div>
             
             <div id="quest-completed-msg" class="hidden text-center py-4">
@@ -304,19 +304,27 @@
         </div>
     </div>
 
-    <!-- Penalty Overlay -->
+    <!-- V3 Penalty Overlay (Rehab) -->
     <div id="penalty-overlay" class="hidden penalty-overlay">
         <div class="system-panel p-8 max-w-lg w-full border-red-600 text-center penalty-mode animate-pulse">
-            <h1 class="text-4xl font-bold text-red-600 mb-4">PENALITÀ ATTIVA</h1>
-            <p class="text-white mb-6">Non hai completato l'addestramento. Trasferimento in Zona Sopravvivenza.</p>
+            <h1 class="text-4xl font-bold text-red-600 mb-4">CONNESSIONE PERSA</h1>
+            <p class="text-white mb-6">Il Sistema non ha registrato l'allenamento. Nessun problema, ripartiamo da qui.</p>
+            
             <div class="bg-red-900/20 p-4 border border-red-600 mb-6">
-                <h3 class="text-xl font-bold text-red-500 mb-2">SOPRAVVIVENZA</h3>
-                <p class="text-lg text-white mb-4">Wall Sit (Muro) della Morte</p>
-                <div class="text-5xl font-mono text-red-500 my-4" id="penalty-timer">00:00</div>
+                <h3 class="text-xl font-bold text-red-500 mb-2">QUEST DI RIABILITAZIONE</h3>
+                <p class="text-md text-gray-300 mb-4">Chiudi gli occhi. Fai 10 respiri profondi lenti (inspira dal naso, espira dalla bocca).</p>
+                <div class="text-6xl font-mono text-red-500 my-4" id="penalty-timer">01:00</div>
             </div>
-            <button onclick="startPenaltyTimer()" id="start-penalty-btn" class="btn-system w-full py-3 border-red-600 text-red-500 hover:bg-red-600 hover:text-black">
-                INIZIA
-            </button>
+            
+            <div class="flex flex-col sm:flex-row gap-4 mt-4">
+                <button onclick="startPenaltyTimer()" id="start-penalty-btn" class="btn-system flex-1 py-3 border-red-600 text-red-500 hover:bg-red-600 hover:text-black">
+                    <i class="fas fa-wind"></i> INIZIA RESPIRAZIONE
+                </button>
+                
+                <button onclick="bribeSystem()" id="bribe-btn" class="btn-system flex-1 py-3 border-yellow-500 text-yellow-500 hover:bg-yellow-600 hover:text-black">
+                    <i class="fas fa-coins"></i> PAGA 50 XP (SALTA)
+                </button>
+            </div>
         </div>
     </div>
 
@@ -346,26 +354,25 @@
     </div>
 
     <script>
-        // --- GRADUAL & GLUTE-SAFE EXERCISE DB ---
-        // Increments (inc) are much smaller. Requirements (reqVal) are much higher.
+        // --- GRADUAL & GLUTE-SAFE EXERCISE DB (V3 Tweaks) ---
         const EXERCISE_TIERS = {
             pushups: [
-                { name: "Piegamenti (Muro/Ginocchia)", reqStat: "str", reqVal: 0, base: 10, inc: 0.2 },
-                { name: "Piegamenti Classici", reqStat: "str", reqVal: 60, base: 10, inc: 0.3 }, // Sblocco spostato a 60
-                { name: "Piegamenti a Diamante", reqStat: "str", reqVal: 120, base: 8, inc: 0.2 },
-                { name: "Piegamenti Declinati", reqStat: "str", reqVal: 180, base: 8, inc: 0.2 }
+                { name: "Piegamenti (Muro/Ginocchia)", reqStat: "str", reqVal: 0, base: 5, inc: 0.2 }, // Base ridotta a 5
+                { name: "Piegamenti Classici", reqStat: "str", reqVal: 60, base: 8, inc: 0.3 }, 
+                { name: "Piegamenti a Diamante", reqStat: "str", reqVal: 120, base: 5, inc: 0.2 },
+                { name: "Piegamenti Declinati", reqStat: "str", reqVal: 180, base: 5, inc: 0.2 }
             ],
-            squats: [ // Riscritto per scaricare la zona lombare e i glutei
-                { name: "Wall Sit (Sedia al Muro)", reqStat: "agi", reqVal: 0, base: 30, inc: 2, unit: "sec" },
-                { name: "Calf Raises (Polpacci)", reqStat: "agi", reqVal: 50, base: 20, inc: 0.5, unit: "reps" },
-                { name: "Step-Up (Gradino basso)", reqStat: "agi", reqVal: 100, base: 10, inc: 0.2, unit: "reps x gamba" },
-                { name: "Wall Sit 1 Gamba (Muro)", reqStat: "agi", reqVal: 150, base: 20, inc: 1, unit: "sec x gamba" }
+            squats: [
+                { name: "Wall Sit (Sedia al Muro)", reqStat: "agi", reqVal: 0, base: 20, inc: 1.5, unit: "sec" }, // Base ridotta
+                { name: "Calf Raises (Polpacci)", reqStat: "agi", reqVal: 50, base: 15, inc: 0.5, unit: "reps" },
+                { name: "Step-Up (Gradino basso)", reqStat: "agi", reqVal: 100, base: 10, inc: 0.2, unit: "reps" },
+                { name: "Wall Sit 1 Gamba", reqStat: "agi", reqVal: 150, base: 15, inc: 1, unit: "sec" }
             ],
-            situps: [ // Riscritto per proteggere lo psoas e la schiena
-                { name: "Crunch Brevi (Spalle alzate)", reqStat: "str", reqVal: 0, base: 15, inc: 0.3 },
-                { name: "Plank sui Gomiti", reqStat: "str", reqVal: 40, base: 30, inc: 1, unit: "sec" },
-                { name: "Dead Bug (Insetto Morto)", reqStat: "str", reqVal: 90, base: 10, inc: 0.3, unit: "reps" },
-                { name: "Hollow Body (Ginocchia piegate)", reqStat: "str", reqVal: 140, base: 20, inc: 1, unit: "sec" }
+            situps: [ 
+                { name: "Crunch Brevi (Spalle alzate)", reqStat: "str", reqVal: 0, base: 10, inc: 0.3 },
+                { name: "Plank sui Gomiti", reqStat: "str", reqVal: 40, base: 20, inc: 1, unit: "sec" },
+                { name: "Dead Bug (Insetto Morto)", reqStat: "str", reqVal: 90, base: 8, inc: 0.3, unit: "reps" },
+                { name: "Hollow Body Hold", reqStat: "str", reqVal: 140, base: 15, inc: 1, unit: "sec" }
             ],
             cardio: [
                 { name: "Shadow Boxing Leggero", reqStat: "vit", reqVal: 0, base: 1, inc: 0.05, unit: "min" },
@@ -373,19 +380,16 @@
                 { name: "Shadow Boxing Intenso", reqStat: "vit", reqVal: 120, base: 3, inc: 0.1, unit: "min" }
             ],
             flexibility: [
-                { name: "Stretching Schiena & Gatto", reqStat: "sen", reqVal: 0, base: 5, inc: 0, unit: "min" },
-                { name: "Mobilità Articolare Totale", reqStat: "sen", reqVal: 80, base: 7, inc: 0, unit: "min" }
+                { name: "Stretching Schiena & Gatto", reqStat: "sen", reqVal: 0, base: 3, inc: 0, unit: "min" },
+                { name: "Mobilità Articolare Totale", reqStat: "sen", reqVal: 80, base: 5, inc: 0, unit: "min" }
             ]
         };
 
         const BONUS_MISSIONS = [
-            "Fai almeno 3 piani di scale invece dell'ascensore oggi.",
             "Bevi 2 bicchieri d'acqua appena sveglio o ora.",
-            "Cammina per 15 minuti senza guardare il telefono.",
             "Fai 10 respiri profondi (Inspira 4s, Tieni 4s, Espira 4s).",
             "Mettiti dritto e correggi la postura per i prossimi 10 minuti.",
-            "Stai in equilibrio su una gamba sola per 1 minuto (poi cambia gamba).",
-            "Riordina una stanza/postazione per 5 minuti esatti."
+            "Stai in equilibrio su una gamba sola per 1 minuto."
         ];
 
         const ICONS = {
@@ -393,12 +397,10 @@
             cardio: "fa-running", flexibility: "fa-yin-yang"
         };
         
-        // --- STATE & INITIALIZATION ---
-        // Setting defaults close to User's request in case they don't import
+        // --- STATE ---
         let player = {
-            name: "Giocatore",
-            level: 1, xp: 0, xpToNext: 100,
-            stats: { str: 10, agi: 10, vit: 10, sen: 10 },
+            name: "Giocatore", level: 10, xp: 34, xpToNext: 511,
+            stats: { str: 53, agi: 33, vit: 38, sen: 33 },
             statPoints: 0, penaltyActive: false
         };
 
@@ -431,25 +433,13 @@
         }
 
         function toggleSettings() {
-            const panel = document.getElementById('settings-panel');
-            panel.classList.toggle('hidden');
+            document.getElementById('settings-panel').classList.toggle('hidden');
         }
 
-        // --- DATA MANAGEMENT (SAVE/LOAD/EXPORT) ---
         function loadData() {
             const savedPlayer = localStorage.getItem('sl_v2_player');
             const savedDaily = localStorage.getItem('sl_v2_daily');
-            
-            if (savedPlayer) {
-                player = JSON.parse(savedPlayer);
-            } else {
-                // If NO data exists, initialize with User's Level 10 stats automatically!
-                player = {
-                    name: "Giocatore", level: 10, xp: 34, xpToNext: 511,
-                    stats: { str: 53, agi: 33, vit: 38, sen: 33 },
-                    statPoints: 0, penaltyActive: false
-                };
-            }
+            if (savedPlayer) player = JSON.parse(savedPlayer);
             if (savedDaily) dailyProgress = JSON.parse(savedDaily);
         }
 
@@ -483,46 +473,30 @@
                         saveData();
                         showToast("Dati sincronizzati col Sistema.");
                         setTimeout(() => location.reload(), 1500);
-                    } else {
-                        showToast("File di salvataggio non valido.");
-                    }
-                } catch (err) {
-                    showToast("Errore durante la lettura del file.");
-                }
+                    } else showToast("File di salvataggio non valido.");
+                } catch (err) { showToast("Errore durante la lettura del file."); }
             };
             reader.readAsText(file);
         }
 
-        // --- NOTIFICATIONS ---
         function checkNotificationStatus() {
             if (!("Notification" in window)) {
-                document.getElementById('notification-status').innerHTML = "<span class='text-red-500'><i class='fas fa-ban'></i> Avvisi Non Supportati</span>";
+                document.getElementById('notification-status').innerHTML = "<span class='text-red-500'><i class='fas fa-ban'></i> Avvisi Off</span>";
             } else if (Notification.permission === "granted") {
-                document.getElementById('notification-status').innerHTML = "<span class='text-green-500'><i class='fas fa-bell'></i> Avvisi Attivi</span>";
+                document.getElementById('notification-status').innerHTML = "<span class='text-green-500'><i class='fas fa-bell'></i> Avvisi On</span>";
             }
         }
 
         function enableNotifications() {
-            if (!("Notification" in window)) {
-                showToast("Il tuo browser non supporta le notifiche.");
-                return;
-            }
+            if (!("Notification" in window)) return showToast("Il tuo browser non supporta le notifiche.");
             Notification.requestPermission().then(permission => {
                 if (permission === "granted") {
-                    showToast("Notifiche attivate! Riceverai avvisi di sistema.");
-                    new Notification("IL SISTEMA", { body: "Canale di comunicazione stabilito." });
+                    showToast("Notifiche attivate.");
                     checkNotificationStatus();
                 }
             });
         }
 
-        function sendSystemNotification(title, body) {
-            if ("Notification" in window && Notification.permission === "granted") {
-                new Notification(title, { body: body });
-            }
-        }
-
-        // --- LOGIC ---
         function checkDateLogic() {
             const today = new Date().toDateString();
             if (!dailyProgress.date) {
@@ -533,7 +507,6 @@
             if (dailyProgress.date !== today) {
                 if (!dailyProgress.completed && !player.penaltyActive) {
                     player.penaltyActive = true;
-                    sendSystemNotification("PENALITÀ", "Non hai completato la quest. Zona Sopravvivenza attiva.");
                 }
                 dailyProgress.date = today;
                 dailyProgress.completed = false;
@@ -552,19 +525,14 @@
 
         function generateDailyQuest() {
             dailyProgress.exercises = {};
-            
-            // Generate standard physical quest
             for (let type in EXERCISE_TIERS) {
                 const variant = getBestExerciseTier(type);
-                // Math.floor to ensure integers. Very slow growth using variant.inc
                 let quantity = Math.floor(variant.base + ((player.level - 1) * variant.inc)); 
                 dailyProgress.exercises[type] = {
                     name: variant.name, target: quantity, current: 0,
                     unit: variant.unit || "reps", done: false
                 };
             }
-
-            // Generate Bonus Real Life Quest (35% chance)
             if (Math.random() < 0.35) {
                 const randomQuest = BONUS_MISSIONS[Math.floor(Math.random() * BONUS_MISSIONS.length)];
                 dailyProgress.bonusQuest = { text: randomQuest, done: false };
@@ -573,7 +541,44 @@
             }
         }
 
-        // --- UI ---
+        // --- V3 BRIBE SYSTEM ---
+        function bribeSystem() {
+            if (player.xp >= 50) {
+                playSound(sfxClick);
+                player.xp -= 50;
+                player.penaltyActive = false;
+                // Preveniamo che il sistema scatti in rosso al ricaricamento
+                dailyProgress.date = new Date().toDateString();
+                saveData();
+                showToast("-50 XP. Riattivazione Sistema forzata.");
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                alert("Non hai abbastanza XP (minimo 50). Fai la respirazione di 60 secondi, è facile!");
+            }
+        }
+
+        // --- V3 PENALTY (REHAB) ---
+        let penaltySeconds = 60; // Abbassato da 180 a 60 secondi
+        function startPenaltyTimer() {
+            document.getElementById('start-penalty-btn').disabled = true;
+            document.getElementById('bribe-btn').disabled = true;
+            const timerEl = document.getElementById('penalty-timer');
+            const interval = setInterval(() => {
+                penaltySeconds--;
+                const m = Math.floor(penaltySeconds/60).toString().padStart(2,'0');
+                const s = (penaltySeconds%60).toString().padStart(2,'0');
+                timerEl.innerText = `${m}:${s}`;
+                if(penaltySeconds<=0) {
+                    clearInterval(interval);
+                    showToast("Riabilitazione Neurale completata.");
+                    player.penaltyActive = false;
+                    saveData();
+                    setTimeout(() => location.reload(), 1500);
+                }
+            }, 1000);
+        }
+
+        // --- UI RENDERING ---
         function renderUI() {
             document.getElementById('level-display').innerText = player.level;
             document.getElementById('str-val').innerText = player.stats.str;
@@ -607,7 +612,6 @@
             } else {
                 document.getElementById('penalty-overlay').classList.add('hidden');
                 
-                // Bonus Quest UI
                 const bonusPanel = document.getElementById('bonus-quest-panel');
                 if (dailyProgress.bonusQuest && !dailyProgress.bonusQuest.done && !dailyProgress.completed) {
                     bonusPanel.classList.remove('hidden');
@@ -712,7 +716,7 @@
             const critChance = 5 + (player.stats.sen * 0.5);
             const isCrit = Math.random() * 100 < critChance;
             
-            let xpGain = Math.floor(20 + (player.level * 8)); // Scaled down slightly for balance
+            let xpGain = Math.floor(20 + (player.level * 8)); 
             if (isCrit) {
                 xpGain *= 2;
                 playSound(sfxCrit);
@@ -753,27 +757,6 @@
                 saveData();
                 renderUI();
             }
-        }
-
-        // --- PENALTY ---
-        let penaltySeconds = 180;
-        function startPenaltyTimer() {
-            document.getElementById('start-penalty-btn').disabled = true;
-            const timerEl = document.getElementById('penalty-timer');
-            const interval = setInterval(() => {
-                penaltySeconds--;
-                const m = Math.floor(penaltySeconds/60).toString().padStart(2,'0');
-                const s = (penaltySeconds%60).toString().padStart(2,'0');
-                timerEl.innerText = `${m}:${s}`;
-                if(penaltySeconds<=0) {
-                    clearInterval(interval);
-                    sendSystemNotification("PENALITÀ COMPLETATA", "Puoi tornare alla dashboard principale.");
-                    showToast("Sopravvivenza Completata.");
-                    player.penaltyActive = false;
-                    saveData();
-                    setTimeout(() => location.reload(), 2000);
-                }
-            }, 1000);
         }
 
         function startCountdownClock() {
