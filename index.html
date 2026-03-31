@@ -696,10 +696,23 @@
             if (savedPlayer) player = JSON.parse(savedPlayer);
             if (savedDaily) dailyProgress = JSON.parse(savedDaily);
 
+            let needsSave = false;
+
+            // PATCH: Controlla se è un vecchio salvataggio incompatibile e forza la rigenerazione
+            if (dailyProgress && dailyProgress.exercises) {
+                const firstKey = Object.keys(dailyProgress.exercises)[0];
+                if (firstKey && dailyProgress.exercises[firstKey] && dailyProgress.exercises[firstKey].desc === undefined) {
+                    generateDailyQuest();
+                    needsSave = true;
+                }
+            }
+
             if(dailyProgress && !dailyProgress.cyclette && !dailyProgress.completed) {
                 generateCycletteQuest();
-                saveData(); 
+                needsSave = true; 
             }
+
+            if(needsSave) saveData();
         }
 
         function exportData() {
@@ -865,7 +878,9 @@
                 if (dailyProgress.bonusQuest && !dailyProgress.bonusQuest.done && !dailyProgress.completed) {
                     bonusPanel.classList.remove('hidden');
                     document.getElementById('bonus-quest-desc').innerText = `"${dailyProgress.bonusQuest.text}"`;
-                    document.getElementById('bonus-info-btn').onclick = () => showInfo('Quest Nascosta', dailyProgress.bonusQuest.desc);
+                    // PATCH: Evita errori se la descrizione bonus manca
+                    const safeDesc = dailyProgress.bonusQuest.desc ? dailyProgress.bonusQuest.desc.replace(/'/g, "\\'") : "";
+                    document.getElementById('bonus-info-btn').onclick = () => showInfo('Quest Nascosta', safeDesc);
                 } else {
                     bonusPanel.classList.add('hidden');
                 }
@@ -899,6 +914,8 @@
                 return;
             }
 
+            const safeDesc = data.desc ? data.desc.replace(/'/g, "\\'") : "";
+
             if (activeKey === 'cyclette') {
                 container.innerHTML = `
                     <div class="timer-active-box flex-col sm:flex-row gap-3 mb-2" style="background-color: rgba(255, 69, 0, 0.05); border-color: var(--sl-fire);">
@@ -911,6 +928,9 @@
                             <button onclick="stopExerciseTimer()" class="px-4 py-2 border border-red-500 bg-red-900/30 rounded font-bold text-red-500 hover:bg-red-800 transition-colors"><i class="fas fa-stop"></i></button>
                         </div>
                     </div>
+                    <div class="h-1 progress-bg w-full rounded overflow-hidden">
+                        <div id="timer-bar-cyclette" class="h-full progress-fire transition-all duration-1000" style="width: 0%;"></div>
+                    </div>
                 `;
                 return;
             }
@@ -918,7 +938,7 @@
             container.innerHTML = `
                 <div class="flex justify-between items-center mb-4 relative z-10">
                     <div class="flex items-center gap-4">
-                        <i class="fas fa-info-circle info-btn text-2xl" onclick="showInfo('${data.name}', '${data.desc.replace(/'/g, "\\'")}')"></i>
+                        <i class="fas fa-info-circle info-btn text-2xl" onclick="showInfo('${data.name}', '${safeDesc}')"></i>
                         <div>
                             <span class="font-bold text-white block text-lg tracking-wide leading-tight">${data.name}</span>
                         </div>
@@ -941,6 +961,7 @@
                 const data = dailyProgress.exercises[key];
                 if (!data.done) allDone = false;
                 const iconClass = ICONS[key] || "fa-star";
+                const safeDesc = data.desc ? data.desc.replace(/'/g, "\\'") : "";
                 
                 const item = document.createElement('div');
                 item.className = "bg-[#0d1117] p-5 border border-[#30363d] rounded shadow-[0_0_10px_rgba(0,0,0,0.5)] mb-4 relative overflow-hidden";
@@ -956,6 +977,9 @@
                                 <span id="timer-text-${key}" class="font-mono text-xl font-black" style="color: var(--sl-glow)">Prep: 3s</span>
                                 <button onclick="stopExerciseTimer()" class="px-4 py-2 border border-red-500 bg-red-900/30 rounded font-bold text-red-500 hover:bg-red-800 transition-colors"><i class="fas fa-stop"></i></button>
                             </div>
+                        </div>
+                        <div class="absolute bottom-0 left-0 h-1 progress-bg w-full z-0">
+                            <div id="timer-bar-${key}" class="h-full transition-all duration-1000 progress-fill" style="width: 0%;"></div>
                         </div>
                     `;
                 } 
@@ -979,7 +1003,7 @@
                     item.innerHTML = `
                         <div class="flex justify-between items-center mb-4 relative z-10">
                             <div class="flex items-center gap-4">
-                                <i class="fas fa-info-circle info-btn text-2xl" onclick="showInfo('${data.name}', '${data.desc.replace(/'/g, "\\'")}')"></i>
+                                <i class="fas fa-info-circle info-btn text-2xl" onclick="showInfo('${data.name}', '${safeDesc}')"></i>
                                 <div>
                                     <span class="font-bold text-[#00f0ff] block text-lg pr-2 leading-tight tracking-wide" style="text-shadow: 0 0 5px rgba(0,240,255,0.5)">${data.name}</span>
                                 </div>
