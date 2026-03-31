@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE SYSTEM - V3 Rehab</title>
+    <title>THE SYSTEM - V4 Power & Timer</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
@@ -16,6 +16,7 @@
             --sl-red: #ff3333;
             --sl-gold: #ffd700;
             --sl-purple: #b026ff;
+            --sl-fire: #ff4500;
         }
 
         body {
@@ -23,66 +24,81 @@
             color: #fff;
             font-family: 'Rajdhani', sans-serif;
             overflow-x: hidden;
-            background-image: radial-gradient(circle at center, #111 0%, #000 100%);
+            background-image: radial-gradient(circle at center, #0d1117 0%, #000 100%);
         }
 
         .system-panel {
-            background: rgba(13, 17, 23, 0.95);
+            background: rgba(22, 27, 34, 0.95);
             border: 1px solid #30363d;
             box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
             backdrop-filter: blur(5px);
-            border-radius: 4px;
+            border-radius: 6px;
         }
 
         .system-header {
-            border-bottom: 1px solid var(--sl-blue);
+            border-bottom: 1px solid var(--sl-glow);
             padding-bottom: 0.5rem;
             margin-bottom: 1rem;
             text-transform: uppercase;
             color: var(--sl-glow);
             text-shadow: 0 0 10px var(--sl-blue);
-            font-weight: 700;
+            font-weight: 800;
+            letter-spacing: 2px;
         }
 
         .stat-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.5rem 0;
+            padding: 0.75rem 0;
             border-bottom: 1px solid #30363d;
         }
 
         .glow-text {
             color: var(--sl-glow);
-            text-shadow: 0 0 5px var(--sl-glow);
+            text-shadow: 0 0 8px var(--sl-glow);
+            font-weight: 800;
         }
 
         .btn-system {
             background: transparent;
-            border: 1px solid var(--sl-blue);
+            border: 1px solid var(--sl-glow);
             color: var(--sl-glow);
             text-transform: uppercase;
             font-weight: bold;
             transition: all 0.3s ease;
             cursor: pointer;
+            box-shadow: 0 0 5px rgba(0, 240, 255, 0.2);
+            border-radius: 4px;
         }
 
         .btn-system:hover:not(:disabled) {
-            background: var(--sl-blue);
+            background: var(--sl-glow);
             color: #000;
-            box-shadow: 0 0 15px var(--sl-glow);
+            box-shadow: 0 0 20px var(--sl-glow);
         }
 
         .btn-system:disabled {
             border-color: #555;
             color: #555;
             cursor: not-allowed;
+            box-shadow: none;
         }
 
-        /* Quest Segreta */
+        .info-btn {
+            color: #888;
+            transition: color 0.2s, text-shadow 0.2s;
+            cursor: pointer;
+        }
+        .info-btn:hover {
+            color: var(--sl-glow);
+            text-shadow: 0 0 8px var(--sl-glow);
+        }
+
+        /* Quest Bonus */
         .hidden-quest-panel {
             border-color: var(--sl-purple) !important;
-            box-shadow: 0 0 15px rgba(176, 38, 255, 0.2) !important;
+            box-shadow: 0 0 15px rgba(176, 38, 255, 0.15) !important;
         }
         .hidden-quest-header {
             color: var(--sl-purple) !important;
@@ -90,9 +106,27 @@
             border-bottom-color: var(--sl-purple) !important;
         }
 
+        /* Cyclette */
+        .cardio-panel {
+            border: 1px dashed var(--sl-fire) !important;
+            box-shadow: 0 0 15px rgba(255, 69, 0, 0.1) !important;
+        }
+        .cardio-header {
+            color: var(--sl-fire) !important;
+            text-shadow: 0 0 10px var(--sl-fire) !important;
+            border-bottom: none;
+        }
+
+        /* Penalty Rehab */
         .penalty-mode {
             border-color: var(--sl-red) !important;
-            box-shadow: 0 0 20px rgba(255, 51, 51, 0.3) !important;
+            box-shadow: 0 0 30px rgba(255, 51, 51, 0.3) !important;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 15px rgba(255,51,51,0.2); }
+            50% { box-shadow: 0 0 35px rgba(255,51,51,0.5); }
+            100% { box-shadow: 0 0 15px rgba(255,51,51,0.2); }
         }
         .penalty-overlay {
             position: fixed;
@@ -106,7 +140,7 @@
         }
 
         .modal-overlay {
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             display: flex;
@@ -116,36 +150,38 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.3s;
+            backdrop-filter: blur(3px);
         }
         .modal-overlay.active {
             opacity: 1;
             pointer-events: all;
         }
         .system-alert {
+            background: rgba(13, 17, 23, 0.95);
             border: 2px solid var(--sl-glow);
-            background: rgba(0, 10, 20, 0.95);
+            border-radius: 8px;
             max-width: 90%;
-            width: 400px;
+            width: 420px;
             padding: 2rem;
             text-align: center;
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.15);
         }
 
-        #toast-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 100;
-        }
+        .progress-fill { background: var(--sl-glow); box-shadow: 0 0 10px var(--sl-glow); }
+        .progress-fire { background: var(--sl-fire); box-shadow: 0 0 10px var(--sl-fire); }
+        .progress-bg { background: #222; }
+
+        #toast-container { position: fixed; top: 20px; right: 20px; z-index: 100; }
         .toast {
-            background: rgba(13, 17, 23, 0.9);
-            border: 1px solid var(--sl-blue);
-            color: white;
-            padding: 1rem;
+            background: rgba(13, 17, 23, 0.95);
+            border: 1px solid var(--sl-glow);
+            color: #fff;
+            padding: 1rem 1.5rem;
             margin-bottom: 0.5rem;
             border-radius: 4px;
-            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
-            animation: slideIn 0.3s ease forwards;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+            animation: slideIn 0.3s forwards;
+            font-weight: 600;
         }
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
@@ -153,133 +189,159 @@
         }
 
         .hidden { display: none !important; }
-        .stat-desc { font-size: 0.65rem; color: #888; display: block; margin-top: -2px; }
+        .stat-desc { font-size: 0.75rem; color: #888; display: block; margin-top: 2px; }
+
+        /* Timer attivo */
+        .timer-active-box {
+            background-color: rgba(0, 240, 255, 0.05);
+            border: 1px solid var(--sl-glow);
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.1);
+        }
     </style>
 </head>
-<body class="p-4 md:p-8 min-h-screen flex flex-col items-center">
+<body class="p-4 md:p-8 flex flex-col items-center">
 
-    <div id="toast-container"></div>
-
+    <!-- AUDIO -->
     <audio id="sfx-level-up" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
     <audio id="sfx-click" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
     <audio id="sfx-crit" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"></audio>
+    
+    <!-- Nuovi Suoni Timer -->
+    <audio id="sfx-tick" src="https://assets.mixkit.co/active_storage/sfx/2569/2569-preview.mp3"></audio> 
+    <audio id="sfx-start-chime" src="https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3"></audio> 
 
-    <!-- Top Navigation / Settings -->
-    <div class="w-full max-w-2xl flex justify-between items-center mb-4 text-xs text-gray-400">
+    <div id="toast-container"></div>
+
+    <!-- Navigazione Top -->
+    <div class="w-full max-w-2xl flex justify-between items-center mb-4 text-xs font-bold text-gray-400">
         <div>
-            <button onclick="toggleSettings()" class="hover:text-blue-400 border border-gray-700 px-2 py-1 rounded"><i class="fas fa-cog"></i> Sistema</button>
-        </div>
-        <div id="notification-status">
-            <button onclick="enableNotifications()" class="hover:text-blue-400 border border-gray-700 px-2 py-1 rounded"><i class="fas fa-bell"></i> Attiva Avvisi</button>
+            <button onclick="toggleSettings()" class="hover:text-white px-3 py-1 border border-gray-700 rounded bg-[#161b22] transition-colors"><i class="fas fa-cog"></i> SISTEMA</button>
         </div>
     </div>
 
-    <!-- Settings Panel (Hidden by default) -->
-    <div id="settings-panel" class="w-full max-w-2xl system-panel p-4 mb-4 hidden">
-        <h2 class="text-lg text-blue-400 border-b border-gray-700 mb-4 pb-2">Gestione Dati Sistema</h2>
+    <!-- Impostazioni -->
+    <div id="settings-panel" class="w-full max-w-2xl system-panel p-5 mb-4 hidden">
+        <h2 class="text-lg text-[#00f0ff] border-b border-[#30363d] mb-4 pb-2 font-bold">Gestione Dati Cacciatore</h2>
         <div class="flex flex-col gap-4">
-            <button onclick="exportData()" class="btn-system py-2 text-sm"><i class="fas fa-download"></i> Esporta Backup Dati</button>
+            <button onclick="exportData()" class="btn-system py-2 text-sm"><i class="fas fa-download"></i> Esporta Backup</button>
             <div class="relative">
                 <input type="file" id="import-file" accept=".json" class="hidden" onchange="importData(event)">
-                <button onclick="document.getElementById('import-file').click()" class="btn-system py-2 text-sm w-full border-yellow-500 text-yellow-500 hover:bg-yellow-900"><i class="fas fa-upload"></i> Importa Salvataggio</button>
+                <button onclick="document.getElementById('import-file').click()" class="btn-system py-2 text-sm w-full" style="border-color: var(--sl-gold); color: var(--sl-gold);"><i class="fas fa-upload"></i> Importa Backup</button>
             </div>
-            <p class="text-xs text-gray-500 text-center">Usa queste opzioni per non perdere i progressi se cambi browser o pulisci la cache.</p>
+            <p class="text-xs text-gray-500 text-center">Il sistema usa la chiave di memoria "sl_v2_player" per mantenere le tue vecchie statistiche.</p>
         </div>
     </div>
 
     <div id="main-container" class="w-full max-w-2xl transition-all duration-500">
         
-        <!-- Status Panel -->
-        <div class="system-panel p-4 mb-6 relative">
-            <h1 class="text-2xl font-bold tracking-widest text-center text-blue-400 mb-2">STATUS UTENTE</h1>
+        <!-- Status Principale -->
+        <div class="system-panel p-6 mb-6 relative">
+            <h1 class="text-2xl font-black tracking-widest text-center text-[#00f0ff] mb-6">STATUS UTENTE</h1>
             
-            <div class="grid grid-cols-2 gap-4 mb-4">
+            <div class="grid grid-cols-2 gap-4 mb-6">
                 <div>
-                    <div class="text-gray-400 text-sm">NOME</div>
-                    <div class="text-xl font-bold" id="player-name">GIOCATORE</div>
+                    <div class="text-gray-400 text-xs uppercase tracking-wider font-bold">NOME</div>
+                    <div class="text-2xl font-black text-white" id="player-name">CACCIATORE</div>
                 </div>
                 <div class="text-right">
-                    <div class="text-gray-400 text-sm">TITOLO</div>
-                    <div class="text-sm font-bold text-yellow-500" id="player-title">Cacciatore (C-Rank)</div>
+                    <div class="text-gray-400 text-xs uppercase tracking-wider font-bold">TITOLO</div>
+                    <div class="text-sm font-black text-yellow-500" id="player-title">C-Rank</div>
                 </div>
             </div>
 
-            <div class="flex items-end gap-2 mb-1">
-                <span class="text-4xl font-bold text-white">LV. <span id="level-display" class="glow-text">10</span></span>
+            <div class="flex items-end gap-2 mb-2">
+                <span class="text-5xl font-black text-white">LV. <span id="level-display" class="glow-text">11</span></span>
             </div>
 
-            <!-- XP Bar -->
-            <div class="w-full bg-gray-800 h-4 border border-gray-600 mb-4 relative">
-                <div id="xp-bar" class="bg-blue-500 h-full transition-all duration-700" style="width: 0%"></div>
-                <span class="absolute top-0 left-0 w-full text-center text-xs leading-4 text-white mix-blend-difference" id="xp-text">0 / 100</span>
+            <div class="w-full progress-bg h-2 mb-8 relative overflow-hidden rounded">
+                <div id="xp-bar" class="progress-fill h-full transition-all duration-700" style="width: 0%"></div>
             </div>
 
-            <!-- Stats Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 text-sm">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5 text-sm">
                 <div class="stat-row">
                     <div>
-                        <span class="text-gray-300 font-bold block">FORZA (STR)</span>
-                        <span class="stat-desc">Difficoltà Piegamenti / Core</span>
+                        <span class="text-white font-bold block text-base tracking-wide">FORZA (STR)</span>
+                        <span class="stat-desc">Spinta e Core</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span id="str-val" class="font-bold text-lg text-blue-300">10</span>
-                        <button onclick="addStat('str')" class="stat-btn hidden text-yellow-400 hover:text-yellow-200 text-xl"><i class="fas fa-plus-square"></i></button>
+                        <span id="str-val" class="font-bold text-xl text-[#00f0ff]">65</span>
+                        <button onclick="addStat('str')" class="stat-btn hidden text-yellow-500 hover:text-yellow-300 text-2xl transition-colors"><i class="fas fa-plus-square"></i></button>
                     </div>
                 </div>
                 <div class="stat-row">
                     <div>
-                        <span class="text-gray-300 font-bold block">AGILITÀ (AGI)</span>
-                        <span class="stat-desc">Difficoltà Gambe (Glute-Safe)</span>
+                        <span class="text-white font-bold block text-base tracking-wide">AGILITÀ (AGI)</span>
+                        <span class="stat-desc">Gambe e Glute-Safe</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span id="agi-val" class="font-bold text-lg text-blue-300">10</span>
-                        <button onclick="addStat('agi')" class="stat-btn hidden text-yellow-400 hover:text-yellow-200 text-xl"><i class="fas fa-plus-square"></i></button>
+                        <span id="agi-val" class="font-bold text-xl text-[#00f0ff]">40</span>
+                        <button onclick="addStat('agi')" class="stat-btn hidden text-yellow-500 hover:text-yellow-300 text-2xl transition-colors"><i class="fas fa-plus-square"></i></button>
                     </div>
                 </div>
                 <div class="stat-row">
                     <div>
-                        <span class="text-gray-300 font-bold block">VITALITÀ (VIT)</span>
-                        <span class="stat-desc">Cardio / Resistenza</span>
+                        <span class="text-white font-bold block text-base tracking-wide">VITALITÀ (VIT)</span>
+                        <span class="stat-desc">Resistenza Cardio</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span id="vit-val" class="font-bold text-lg text-blue-300">10</span>
-                        <button onclick="addStat('vit')" class="stat-btn hidden text-yellow-400 hover:text-yellow-200 text-xl"><i class="fas fa-plus-square"></i></button>
+                        <span id="vit-val" class="font-bold text-xl text-[#00f0ff]">44</span>
+                        <button onclick="addStat('vit')" class="stat-btn hidden text-yellow-500 hover:text-yellow-300 text-2xl transition-colors"><i class="fas fa-plus-square"></i></button>
                     </div>
                 </div>
                 <div class="stat-row">
                     <div>
-                        <span class="text-gray-300 font-bold block">SENSO (SEN)</span>
-                        <span class="stat-desc">% Critico / Bonus Reali</span>
+                        <span class="text-white font-bold block text-base tracking-wide">SENSO (SEN)</span>
+                        <span class="stat-desc">Flessibilità e Critico</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span id="sen-val" class="font-bold text-lg text-blue-300">10</span>
-                        <button onclick="addStat('sen')" class="stat-btn hidden text-yellow-400 hover:text-yellow-200 text-xl"><i class="fas fa-plus-square"></i></button>
+                        <span id="sen-val" class="font-bold text-xl text-[#00f0ff]">36</span>
+                        <button onclick="addStat('sen')" class="stat-btn hidden text-yellow-500 hover:text-yellow-300 text-2xl transition-colors"><i class="fas fa-plus-square"></i></button>
                     </div>
                 </div>
             </div>
 
-            <div id="stat-points-container" class="mt-4 text-center hidden">
-                <span class="text-yellow-400 font-bold border border-yellow-400 px-3 py-1 rounded bg-yellow-900/20">
-                    Punti Status Disponibili: <span id="stat-points">0</span>
+            <div id="stat-points-container" class="mt-6 text-center hidden">
+                <span class="text-yellow-500 font-bold px-4 py-2 rounded uppercase tracking-widest text-sm border border-yellow-500/50 bg-yellow-900/20">
+                    Punti Attributo: <span id="stat-points" class="font-black text-lg">0</span>
                 </span>
             </div>
         </div>
 
-        <!-- Hidden Quest Section (Appears Randomly) -->
+        <!-- Quest Nascosta -->
         <div id="bonus-quest-panel" class="system-panel p-4 mb-6 hidden-quest-panel hidden">
-            <div class="system-header hidden-quest-header flex justify-between items-center text-sm">
-                <span><i class="fas fa-exclamation-triangle"></i> QUEST DI EMERGENZA (VITA REALE)</span>
-                <span class="text-xs bg-purple-900 px-2 py-1 rounded text-white">BONUS EXP</span>
+            <div class="system-header hidden-quest-header flex justify-between items-center text-sm border-none mb-0 pb-2">
+                <span><i class="fas fa-exclamation-triangle"></i> QUEST DI EMERGENZA</span>
+                <span class="text-xs px-2 py-1 rounded font-bold bg-purple-900/30 text-purple-400 border border-purple-500/50">XP EXTRA</span>
             </div>
-            <p id="bonus-quest-desc" class="text-lg font-bold text-white mb-4 text-center">Fai 3 piani di scale invece dell'ascensore.</p>
+            <div class="flex items-center justify-between mb-4 mt-2 gap-2">
+                <p id="bonus-quest-desc" class="text-lg text-white italic text-center w-full">"..."</p>
+                <i class="fas fa-info-circle info-btn text-xl" id="bonus-info-btn"></i>
+            </div>
             <div class="flex justify-center">
-                <button id="btn-bonus-complete" onclick="completeBonusQuest()" class="px-6 py-2 border border-purple-500 text-purple-400 hover:bg-purple-900 rounded font-bold transition-colors">
-                    <i class="fas fa-check"></i> FATTO
+                <button onclick="completeBonusQuest()" class="px-8 py-2 border rounded font-bold transition-all uppercase tracking-wider text-sm hover:bg-purple-900/50" style="border-color: var(--sl-purple); color: var(--sl-purple); box-shadow: 0 0 10px rgba(176, 38, 255, 0.2)">
+                    Compiuta
                 </button>
             </div>
         </div>
 
-        <!-- Daily Quest Section -->
+        <!-- Cyclette Cardio (Focus Potenziamento) -->
+        <div id="cardio-panel" class="system-panel cardio-panel p-4 mb-6">
+            <div class="system-header cardio-header flex justify-between items-center text-sm">
+                <span><i class="fas fa-dumbbell"></i> FORGIA DELLE GAMBE (CYCLETTE)</span>
+                <span class="text-xs px-2 py-1 rounded font-bold bg-red-900/30 text-red-400 border border-red-500/50">FACOLTATIVO</span>
+            </div>
+            <div id="cardio-content" class="mt-3">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- Pratica Quotidiana -->
         <div id="quest-panel" class="system-panel p-6">
             <div class="system-header flex justify-between items-center">
                 <span>QUEST GIORNALIERA</span>
@@ -290,174 +352,367 @@
             </div>
 
             <div id="quest-status-area" class="mt-8 text-center">
-                <button id="complete-quest-btn" onclick="finishDailyQuest()" class="btn-system w-full py-4 text-xl tracking-widest" disabled>
+                <button id="complete-quest-btn" onclick="finishDailyQuest()" class="btn-system w-full py-4 text-xl tracking-widest rounded" disabled>
                     COMPLETA QUEST
                 </button>
-                <div class="text-xs text-gray-500 mt-2">La costanza batte l'intensità. Fai anche solo il minimo per mantenere l'abitudine.</div>
+                <div class="text-xs text-gray-500 mt-4 uppercase tracking-widest font-bold">La costanza forgia l'arma.</div>
             </div>
             
-            <div id="quest-completed-msg" class="hidden text-center py-4">
-                <h3 class="text-2xl text-green-400 font-bold mb-2">QUEST COMPLETATA</h3>
-                <p class="text-gray-400">Riposo. Il corpo si sta adattando.</p>
-                <div class="mt-4 text-sm text-blue-300" id="countdown"></div>
+            <div id="quest-completed-msg" class="hidden text-center py-10">
+                <i class="fas fa-check-circle text-5xl mb-4 text-[#00f0ff]" style="filter: drop-shadow(0 0 10px #00f0ff)"></i>
+                <h3 class="text-3xl text-white font-black mb-2 uppercase tracking-widest">QUEST COMPLETATA</h3>
+                <p class="text-gray-400 font-bold">Il Sistema sta assimilando i risultati.</p>
+                <div class="mt-6 text-sm text-[#00f0ff] font-mono border border-[#00f0ff]/30 py-2 rounded inline-block px-5 font-bold" id="countdown"></div>
             </div>
         </div>
     </div>
 
-    <!-- V3 Penalty Overlay (Rehab) -->
+    <!-- Penalità (Riabilitazione Neurale) -->
     <div id="penalty-overlay" class="hidden penalty-overlay">
-        <div class="system-panel p-8 max-w-lg w-full border-red-600 text-center penalty-mode animate-pulse">
-            <h1 class="text-4xl font-bold text-red-600 mb-4">CONNESSIONE PERSA</h1>
-            <p class="text-white mb-6">Il Sistema non ha registrato l'allenamento. Nessun problema, ripartiamo da qui.</p>
+        <div class="system-panel p-8 max-w-lg w-full border-red-600 text-center penalty-mode">
+            <h1 class="text-4xl font-bold text-red-600 mb-4 tracking-widest">CONNESSIONE PERSA</h1>
+            <p class="text-gray-300 font-bold mb-6">Nessun problema, ripartiamo da qui. Il Sistema richiede riallineamento.</p>
             
-            <div class="bg-red-900/20 p-4 border border-red-600 mb-6">
-                <h3 class="text-xl font-bold text-red-500 mb-2">QUEST DI RIABILITAZIONE</h3>
-                <p class="text-md text-gray-300 mb-4">Chiudi gli occhi. Fai 10 respiri profondi lenti (inspira dal naso, espira dalla bocca).</p>
-                <div class="text-6xl font-mono text-red-500 my-4" id="penalty-timer">01:00</div>
+            <div class="bg-red-950/30 p-6 border border-red-500/50 mb-6 rounded">
+                <h3 class="text-2xl font-black text-red-500 mb-3 uppercase">Riabilitazione</h3>
+                <p class="text-sm text-gray-400 mb-5 font-bold">Chiudi gli occhi. Fai 10 respiri profondi lenti (inspira dal naso, espira dalla bocca).</p>
+                <div class="text-6xl font-black font-mono my-2 text-red-500" style="text-shadow: 0 0 10px #ff0000;" id="penalty-timer">01:00</div>
             </div>
             
-            <div class="flex flex-col sm:flex-row gap-4 mt-4">
-                <button onclick="startPenaltyTimer()" id="start-penalty-btn" class="btn-system flex-1 py-3 border-red-600 text-red-500 hover:bg-red-600 hover:text-black">
-                    <i class="fas fa-wind"></i> INIZIA RESPIRAZIONE
-                </button>
-                
-                <button onclick="bribeSystem()" id="bribe-btn" class="btn-system flex-1 py-3 border-yellow-500 text-yellow-500 hover:bg-yellow-600 hover:text-black">
-                    <i class="fas fa-coins"></i> PAGA 50 XP (SALTA)
-                </button>
-            </div>
+            <button onclick="startPenaltyTimer()" id="start-penalty-btn" class="btn-system w-full py-4 text-xl font-black rounded hover:bg-red-900/50" style="border-color: var(--sl-red); color: var(--sl-red); box-shadow: 0 0 15px rgba(255,0,0,0.2)">
+                INIZIA RESPIRAZIONE
+            </button>
         </div>
     </div>
 
     <!-- Reward Modal -->
     <div id="reward-modal" class="modal-overlay">
         <div class="system-alert transform scale-95 transition-transform duration-200">
-            <h2 class="text-2xl font-bold text-blue-400 mb-4 tracking-widest">QUEST COMPLETATA</h2>
-            <div id="crit-badge" class="hidden mb-2 text-yellow-400 font-bold border border-yellow-400 inline-block px-2 rounded">
+            <h2 class="text-3xl font-black text-[#00f0ff] mb-6 uppercase tracking-widest" style="text-shadow: 0 0 10px #00f0ff">LEVEL UP</h2>
+            <div id="crit-badge" class="hidden mb-4 text-yellow-400 font-bold border border-yellow-400/50 bg-yellow-900/20 px-3 py-1 rounded inline-block">
                 SINERGIA PERFETTA (Doppia XP)
             </div>
-            <div class="space-y-2 text-left mb-6">
-                <div class="flex justify-between border-b border-gray-700 py-2">
+            <div class="space-y-4 text-left mb-8 mt-2 font-bold text-gray-300">
+                <div class="flex justify-between border-b border-[#30363d] py-3">
                     <span>Recupero Stato</span>
                     <span class="text-green-400">Completo</span>
                 </div>
-                <div class="flex justify-between border-b border-gray-700 py-2">
-                    <span>Punti Abilità</span>
+                <div class="flex justify-between border-b border-[#30363d] py-3">
+                    <span>Punti Attributo</span>
                     <span class="text-yellow-400">+3</span>
                 </div>
-                <div class="flex justify-between border-b border-gray-700 py-2">
-                    <span>Esperienza</span>
-                    <span class="text-blue-400" id="xp-gain-display">+100</span>
+                <div class="flex justify-between py-3">
+                    <span>Esperienza Acquisita</span>
+                    <span class="text-xl text-[#00f0ff]" id="xp-gain-display">+100</span>
                 </div>
             </div>
-            <button onclick="closeModal()" class="btn-system px-8 py-2 w-full">ACCETTA</button>
+            <button onclick="closeModal()" class="btn-system px-8 py-4 w-full text-xl font-black rounded">ACCETTA</button>
+        </div>
+    </div>
+
+    <!-- Modal Informazioni Esercizio -->
+    <div id="info-modal" class="modal-overlay" onclick="if(event.target===this) closeInfoModal()">
+        <div class="system-alert !p-6" style="border-radius: 8px;">
+            <div class="flex items-center justify-center mb-4">
+                <i class="fas fa-book-open text-2xl mr-3" style="color: var(--sl-glow)"></i>
+                <h3 id="info-title" class="text-2xl font-black text-white uppercase tracking-widest">Titolo</h3>
+            </div>
+            <div class="bg-[#000] border border-[#30363d] p-5 rounded text-left mb-6">
+                <p id="info-desc" class="text-gray-300 text-md leading-relaxed font-semibold">Descrizione</p>
+            </div>
+            <button onclick="closeInfoModal()" class="btn-system w-full py-3 rounded tracking-widest">CHIUDI MANUALE</button>
         </div>
     </div>
 
     <script>
-        // --- GRADUAL & GLUTE-SAFE EXERCISE DB (V3 Tweaks) ---
-        const EXERCISE_TIERS = {
-            pushups: [
-                { name: "Piegamenti (Muro/Ginocchia)", reqStat: "str", reqVal: 0, base: 5, inc: 0.2 }, // Base ridotta a 5
-                { name: "Piegamenti Classici", reqStat: "str", reqVal: 60, base: 8, inc: 0.3 }, 
-                { name: "Piegamenti a Diamante", reqStat: "str", reqVal: 120, base: 5, inc: 0.2 },
-                { name: "Piegamenti Declinati", reqStat: "str", reqVal: 180, base: 5, inc: 0.2 }
-            ],
-            squats: [
-                { name: "Wall Sit (Sedia al Muro)", reqStat: "agi", reqVal: 0, base: 20, inc: 1.5, unit: "sec" }, // Base ridotta
-                { name: "Calf Raises (Polpacci)", reqStat: "agi", reqVal: 50, base: 15, inc: 0.5, unit: "reps" },
-                { name: "Step-Up (Gradino basso)", reqStat: "agi", reqVal: 100, base: 10, inc: 0.2, unit: "reps" },
-                { name: "Wall Sit 1 Gamba", reqStat: "agi", reqVal: 150, base: 15, inc: 1, unit: "sec" }
-            ],
-            situps: [ 
-                { name: "Crunch Brevi (Spalle alzate)", reqStat: "str", reqVal: 0, base: 10, inc: 0.3 },
-                { name: "Plank sui Gomiti", reqStat: "str", reqVal: 40, base: 20, inc: 1, unit: "sec" },
-                { name: "Dead Bug (Insetto Morto)", reqStat: "str", reqVal: 90, base: 8, inc: 0.3, unit: "reps" },
-                { name: "Hollow Body Hold", reqStat: "str", reqVal: 140, base: 15, inc: 1, unit: "sec" }
-            ],
-            cardio: [
-                { name: "Shadow Boxing Leggero", reqStat: "vit", reqVal: 0, base: 1, inc: 0.05, unit: "min" },
-                { name: "Corda (o simulata a vuoto)", reqStat: "vit", reqVal: 60, base: 2, inc: 0.1, unit: "min" },
-                { name: "Shadow Boxing Intenso", reqStat: "vit", reqVal: 120, base: 3, inc: 0.1, unit: "min" }
-            ],
-            flexibility: [
-                { name: "Stretching Schiena & Gatto", reqStat: "sen", reqVal: 0, base: 3, inc: 0, unit: "min" },
-                { name: "Mobilità Articolare Totale", reqStat: "sen", reqVal: 80, base: 5, inc: 0, unit: "min" }
-            ]
-        };
+        // --- AUDIO ---
+        const sfxClick = document.getElementById('sfx-click');
+        const sfxLevelUp = document.getElementById('sfx-level-up');
+        const sfxCrit = document.getElementById('sfx-crit');
+        const sfxTick = document.getElementById('sfx-tick');
+        const sfxStartChime = document.getElementById('sfx-start-chime');
 
-        const BONUS_MISSIONS = [
-            "Bevi 2 bicchieri d'acqua appena sveglio o ora.",
-            "Fai 10 respiri profondi (Inspira 4s, Tieni 4s, Espira 4s).",
-            "Mettiti dritto e correggi la postura per i prossimi 10 minuti.",
-            "Stai in equilibrio su una gamba sola per 1 minuto."
-        ];
+        function playSound(sound) {
+            sound.currentTime = 0;
+            sound.play().catch(e => {});
+        }
 
-        const ICONS = {
-            pushups: "fa-fist-raised", squats: "fa-chair", situps: "fa-shield-alt", 
-            cardio: "fa-running", flexibility: "fa-yin-yang"
-        };
-        
-        // --- STATE ---
+        function showToast(message, color = "var(--sl-glow)") {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.style.borderLeft = `4px solid ${color}`;
+            toast.innerHTML = `<i class="fas fa-info-circle mr-3" style="color: ${color}"></i> ${message}`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 3500);
+        }
+
+        // --- STATE AND STORAGE (CHIAVI ORIGINALI) ---
+        const STORAGE_PLAYER = 'sl_v2_player';
+        const STORAGE_DAILY = 'sl_v2_daily';
+
         let player = {
-            name: "Giocatore", level: 10, xp: 34, xpToNext: 511,
-            stats: { str: 53, agi: 33, vit: 38, sen: 33 },
+            name: "CACCIATORE", level: 1, xp: 0, xpToNext: 100, 
+            stats: { str: 10, agi: 10, vit: 10, sen: 10 },
             statPoints: 0, penaltyActive: false
         };
 
         let dailyProgress = {
             date: null, completed: false,
-            exercises: {}, bonusQuest: null
+            exercises: {}, bonusQuest: null, cyclette: null 
         };
 
-        const sfxClick = document.getElementById('sfx-click');
-        const sfxLevelUp = document.getElementById('sfx-level-up');
-        const sfxCrit = document.getElementById('sfx-crit');
+        // --- EXERCISE DB (V3 REHAB + DESCRIZIONI E UNITA') ---
+        const EXERCISE_TIERS = {
+            str: [ // Pushups
+                { name: "Piegamenti (Muro/Ginocchia)", req: 0, base: 5, inc: 0.2, unit: "reps", desc: "Spinta base. Tieni il core contratto per non inarcare la schiena." },
+                { name: "Piegamenti Classici", req: 60, base: 8, inc: 0.3, unit: "reps", desc: "Corpo in linea retta (Plank). Scendi fino a sfiorare terra col petto. Gomiti a 45 gradi." }, 
+                { name: "Piegamenti a Diamante", req: 120, base: 5, inc: 0.2, unit: "reps", desc: "Mani unite sotto il petto a formare un rombo. Gomiti stretti ai fianchi. Focus estremo tricipiti." },
+                { name: "Piegamenti Declinati", req: 180, base: 5, inc: 0.2, unit: "reps", desc: "Piedi rialzati su sedia/divano. Maggiore carico sul petto alto e spalle anteriori." }
+            ],
+            agi: [ // Squats (Glute-Safe)
+                { name: "Wall Sit (Sedia al Muro)", req: 0, base: 20, inc: 1.5, unit: "sec", desc: "Schiena appoggiata al muro, ginocchia a 90 gradi. Non usare i glutei, isola i quadricipiti." },
+                { name: "Calf Raises (Polpacci)", req: 50, base: 15, inc: 0.5, unit: "reps", desc: "Sollevati sulle punte dei piedi contraendo i polpacci al massimo. Discesa lenta." },
+                { name: "Step-Up (Gradino basso)", req: 100, base: 10, inc: 0.2, unit: "reps", desc: "Sali e scendi alternando le gambe su un gradino. Sforzo dinamico, nessun allungamento estremo." },
+                { name: "Wall Sit 1 Gamba", req: 150, base: 15, inc: 1, unit: "sec x gamba", desc: "Wall sit mantenendo tutto il peso su una sola gamba, stendendo l'altra in avanti." }
+            ],
+            situps: [ // Core (Lombar Safe)
+                { name: "Crunch Brevi (Spalle alzate)", req: 0, base: 10, inc: 0.3, unit: "reps", desc: "Solleva solo le spalle dal pavimento contraendo l'addome. Bassa schiena incollata a terra." },
+                { name: "Plank sui Gomiti", req: 40, base: 20, inc: 1, unit: "sec", desc: "Corpo teso in linea. Se senti tensione ai lombari, alza leggermente il bacino." },
+                { name: "Dead Bug (Insetto Morto)", req: 90, base: 8, inc: 0.3, unit: "reps", desc: "Schiena incollata a terra. Distendi lentamente braccio e gamba opposti verso terra senza toccare." },
+                { name: "Hollow Body Hold", req: 140, base: 15, inc: 1, unit: "sec", desc: "Schiena a terra, solleva spalle e gambe. Tieni le ginocchia piegate verso il petto per sicurezza." }
+            ],
+            vit: [ // Cardio
+                { name: "Shadow Boxing Leggero", req: 0, base: 1, inc: 0.05, unit: "min", desc: "Pugni all'aria, movimento fluido nello spazio. Concentrati sulla respirazione e riscaldamento." },
+                { name: "Corda (o simulata)", req: 60, base: 2, inc: 0.1, unit: "min", desc: "Saltelli leggeri sul posto muovendo i polsi. Tieni il ritmo costante." },
+                { name: "Shadow Boxing Intenso", req: 120, base: 3, inc: 0.1, unit: "min", desc: "Massima velocità. Inserisci finte, schivate e spostamenti rapidi. Simula un combattimento." }
+            ],
+            sen: [ // Flexibility
+                { name: "Stretching Schiena & Gatto", req: 0, base: 3, inc: 0, unit: "min", desc: "A 4 zampe, alterna l'inarcamento della schiena (Mucca) e la spinta verso l'alto (Gatto)." },
+                { name: "Mobilità Articolare Totale", req: 80, base: 5, inc: 0, unit: "min", desc: "Rotazioni ampie di tutte le articolazioni (collo, spalle, polsi, bacino, caviglie)." }
+            ]
+        };
 
-        function playSound(sound) { sound.currentTime = 0; sound.play().catch(e => {}); }
+        const CYCLETTE_POOL = [
+            { name: "Pedalata di Potenza Base", base: 15, inc: 0.5, desc: "Resistenza medio-alta. Focus sulla spinta costante e sul reclutamento dei quadricipiti. Non conta la velocità, conta la forza impressa." },
+            { name: "Salita in Montagna", base: 20, inc: 0.5, desc: "Resistenza molto alta. Immagina una salita ripida. Movimento lento, pesante, che brucia i muscoli delle cosce. Tieni la schiena dritta." },
+            { name: "Sprint di Potenza (Intervalli)", base: 15, inc: 0.5, desc: "Resistenza altissima. 30 secondi spingendo con forza massima, seguiti da 60 secondi di recupero attivo leggero. Pura esplosività." }
+        ];
 
-        function showToast(message) {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.innerHTML = `<i class="fas fa-info-circle mr-2 text-blue-400"></i> ${message}`;
-            container.appendChild(toast);
-            setTimeout(() => { toast.remove(); }, 4000);
+        const BONUS_MISSIONS = [
+            { text: "Bevi 2 bicchieri d'acqua adesso.", desc: "L'idratazione migliora le performance neurali e muscolari." },
+            { text: "Correggi la postura per 10 minuti.", desc: "Spalle indietro, petto in fuori. Elimina le tensioni da smartphone/PC." },
+            { text: "Stai in equilibrio su 1 gamba (1 min).", desc: "Migliora la propriocezione e rafforza i legamenti stabilizzatori." },
+            { text: "Fai 10 respiri diaframmatici profondi.", desc: "Inspira 4s gonfiando la pancia, trattieni 4s, espira 4s." }
+        ];
+
+        const ICONS = {
+            str: "fa-fist-raised", agi: "fa-bolt", situps: "fa-shield-alt", 
+            vit: "fa-running", sen: "fa-yin-yang"
+        };
+
+        // --- TIMER LOGIC (Per-Esercizio) ---
+        let activeInterval = null;
+        let activeKey = null; 
+        let timerState = {};
+
+        function formatTime(secs) {
+            const m = Math.floor(secs / 60).toString().padStart(2, '0');
+            const s = (secs % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
         }
 
+        function startExerciseTimer(key, isCyclette = false) {
+            if (activeInterval) return showToast("Attenzione: Completa l'esercizio in corso.", "var(--sl-fire)");
+            playSound(sfxClick);
+
+            let data = isCyclette ? dailyProgress.cyclette : dailyProgress.exercises[key];
+            let isMinutes = data.unit.includes("min");
+            let isTwoSided = data.unit.includes("lato") || data.unit.includes("gamba");
+            let targetSecs = isMinutes ? data.target * 60 : data.target;
+
+            timerState = {
+                key: key,
+                isCyclette: isCyclette,
+                phase: 'prep1', 
+                timeLeft: 3, 
+                targetSecs: targetSecs,
+                isTwoSided: isTwoSided
+            };
+
+            activeKey = key;
+            renderUI(); 
+            activeInterval = setInterval(() => tickTimer(), 1000);
+        }
+
+        function tickTimer() {
+            timerState.timeLeft--;
+
+            if (timerState.timeLeft > 0 && timerState.timeLeft <= 3 && timerState.phase.includes('prep')) {
+                 playSound(sfxTick);
+            }
+
+            if (timerState.timeLeft <= 0) {
+                if (timerState.phase === 'prep1') {
+                    playSound(sfxStartChime); 
+                    timerState.phase = 'run1';
+                    timerState.timeLeft = timerState.targetSecs;
+                } else if (timerState.phase === 'run1') {
+                    if (timerState.isTwoSided) {
+                        playSound(sfxStartChime); 
+                        timerState.phase = 'prep2';
+                        timerState.timeLeft = 3;
+                    } else {
+                        finishExerciseTimer();
+                        return;
+                    }
+                } else if (timerState.phase === 'prep2') {
+                    playSound(sfxStartChime); 
+                    timerState.phase = 'run2';
+                    timerState.timeLeft = timerState.targetSecs;
+                } else if (timerState.phase === 'run2') {
+                    finishExerciseTimer();
+                    return;
+                }
+            }
+            updateActiveTimerUI();
+        }
+
+        function updateActiveTimerUI() {
+            let display = document.getElementById(`timer-text-${activeKey}`);
+            let progress = document.getElementById(`timer-bar-${activeKey}`);
+            if (!display) return;
+
+            let text = "";
+            let pct = 0;
+
+            if(timerState.phase === 'prep1') {
+                text = `PREPARATI: ${timerState.timeLeft}s`;
+                pct = 0;
+            } else if(timerState.phase === 'run1' && timerState.isTwoSided) {
+                text = `LATO 1: ${formatTime(timerState.timeLeft)}`;
+                pct = 100 - ((timerState.timeLeft / timerState.targetSecs) * 100);
+            } else if(timerState.phase === 'run1' && !timerState.isTwoSided) {
+                text = `TEMPO: ${formatTime(timerState.timeLeft)}`;
+                pct = 100 - ((timerState.timeLeft / timerState.targetSecs) * 100);
+            } else if(timerState.phase === 'prep2') {
+                text = `CAMBIO LATO: ${timerState.timeLeft}s`;
+                pct = 0;
+                display.style.color = "var(--sl-fire)"; 
+            } else if(timerState.phase === 'run2') {
+                text = `LATO 2: ${formatTime(timerState.timeLeft)}`;
+                pct = 100 - ((timerState.timeLeft / timerState.targetSecs) * 100);
+                display.style.color = "var(--sl-glow)";
+            }
+
+            display.innerText = text;
+            if(progress) progress.style.width = `${pct}%`;
+        }
+
+        function stopExerciseTimer() {
+            playSound(sfxClick);
+            clearInterval(activeInterval);
+            activeInterval = null;
+            activeKey = null;
+            renderUI(); 
+        }
+
+        function finishExerciseTimer() {
+            clearInterval(activeInterval);
+            activeInterval = null;
+            let keyToComplete = activeKey;
+            let wasCyclette = timerState.isCyclette;
+            activeKey = null;
+            
+            playSound(sfxStartChime); 
+            
+            if (wasCyclette) {
+                let d = dailyProgress.cyclette;
+                d.current = d.target;
+                d.done = true;
+                const cardioXp = Math.floor(40 + (player.level * 5));
+                player.xp += cardioXp;
+                showToast(`Forgia Completata! +${cardioXp} XP`, "var(--sl-fire)");
+            } else {
+                let d = dailyProgress.exercises[keyToComplete];
+                d.current = d.target;
+                d.done = true;
+            }
+            saveData();
+            renderUI();
+        }
+
+        function forceCompleteExercise(key, isCyclette = false) {
+            playSound(sfxClick);
+            if (isCyclette) {
+                let d = dailyProgress.cyclette;
+                d.current = d.target;
+                d.done = true;
+                const cardioXp = Math.floor(40 + (player.level * 5));
+                player.xp += cardioXp;
+                showToast(`Forgia Completata! +${cardioXp} XP`, "var(--sl-fire)");
+            } else {
+                let d = dailyProgress.exercises[key];
+                d.current = d.target;
+                d.done = true;
+            }
+            saveData();
+            renderUI();
+        }
+
+        // --- INFO MODAL ---
+        function showInfo(title, desc) {
+            playSound(sfxClick);
+            document.getElementById('info-title').innerText = title;
+            document.getElementById('info-desc').innerHTML = desc;
+            document.getElementById('info-modal').classList.add('active');
+        }
+
+        function closeInfoModal() {
+            playSound(sfxClick);
+            document.getElementById('info-modal').classList.remove('active');
+        }
+
+        // --- INIZIALIZZAZIONE ---
         function init() {
             loadData();
             checkDateLogic();
             renderUI();
-            startCountdownClock();
-            checkNotificationStatus();
         }
 
         function toggleSettings() {
+            playSound(sfxClick);
             document.getElementById('settings-panel').classList.toggle('hidden');
         }
 
-        function loadData() {
-            const savedPlayer = localStorage.getItem('sl_v2_player');
-            const savedDaily = localStorage.getItem('sl_v2_daily');
-            if (savedPlayer) player = JSON.parse(savedPlayer);
-            if (savedDaily) dailyProgress = JSON.parse(savedDaily);
+        function saveData() {
+            localStorage.setItem(STORAGE_PLAYER, JSON.stringify(player));
+            localStorage.setItem(STORAGE_DAILY, JSON.stringify(dailyProgress));
         }
 
-        function saveData() {
-            localStorage.setItem('sl_v2_player', JSON.stringify(player));
-            localStorage.setItem('sl_v2_daily', JSON.stringify(dailyProgress));
+        function loadData() {
+            const savedPlayer = localStorage.getItem(STORAGE_PLAYER);
+            const savedDaily = localStorage.getItem(STORAGE_DAILY);
+            if (savedPlayer) player = JSON.parse(savedPlayer);
+            if (savedDaily) dailyProgress = JSON.parse(savedDaily);
+
+            if(dailyProgress && !dailyProgress.cyclette && !dailyProgress.completed) {
+                generateCycletteQuest();
+                saveData(); 
+            }
         }
 
         function exportData() {
+            playSound(sfxClick);
             const data = { player, dailyProgress };
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
             const downloadAnchorNode = document.createElement('a');
             downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "the_system_backup.json");
+            downloadAnchorNode.setAttribute("download", "solo_leveling_backup.json");
             document.body.appendChild(downloadAnchorNode);
             downloadAnchorNode.click();
             downloadAnchorNode.remove();
-            showToast("Backup scaricato con successo.");
+            showToast("Backup salvato.");
         }
 
         function importData(event) {
@@ -471,30 +726,13 @@
                         player = data.player;
                         if(data.dailyProgress) dailyProgress = data.dailyProgress;
                         saveData();
-                        showToast("Dati sincronizzati col Sistema.");
+                        playSound(sfxLevelUp);
+                        showToast("Sistema ripristinato.");
                         setTimeout(() => location.reload(), 1500);
-                    } else showToast("File di salvataggio non valido.");
-                } catch (err) { showToast("Errore durante la lettura del file."); }
+                    } else showToast("File corrotto.", "var(--sl-red)");
+                } catch (err) { showToast("Errore I/O.", "var(--sl-red)"); }
             };
             reader.readAsText(file);
-        }
-
-        function checkNotificationStatus() {
-            if (!("Notification" in window)) {
-                document.getElementById('notification-status').innerHTML = "<span class='text-red-500'><i class='fas fa-ban'></i> Avvisi Off</span>";
-            } else if (Notification.permission === "granted") {
-                document.getElementById('notification-status').innerHTML = "<span class='text-green-500'><i class='fas fa-bell'></i> Avvisi On</span>";
-            }
-        }
-
-        function enableNotifications() {
-            if (!("Notification" in window)) return showToast("Il tuo browser non supporta le notifiche.");
-            Notification.requestPermission().then(permission => {
-                if (permission === "granted") {
-                    showToast("Notifiche attivate.");
-                    checkNotificationStatus();
-                }
-            });
         }
 
         function checkDateLogic() {
@@ -502,6 +740,7 @@
             if (!dailyProgress.date) {
                 dailyProgress.date = today;
                 generateDailyQuest();
+                saveData(); 
                 return;
             }
             if (dailyProgress.date !== today) {
@@ -510,17 +749,40 @@
                 }
                 dailyProgress.date = today;
                 dailyProgress.completed = false;
+                if(activeInterval) stopExerciseTimer();
                 generateDailyQuest();
                 saveData();
             }
         }
 
         function getBestExerciseTier(type) {
-            const variants = EXERCISE_TIERS[type];
-            for (let i = variants.length - 1; i >= 0; i--) {
-                if (player.stats[variants[i].reqStat] >= variants[i].reqVal) return variants[i];
+            // Nota: per i core, la key in app è 'situps' ma la statistica da controllare è sempre 'str'
+            let reqStatKey = type === 'situps' ? 'str' : type; 
+            const tiers = EXERCISE_TIERS[type];
+            let bestTier = tiers[0];
+            
+            for (let i = tiers.length - 1; i >= 0; i--) {
+                if (player.stats[reqStatKey] >= tiers[i].req) {
+                    bestTier = tiers[i];
+                    break;
+                }
             }
-            return variants[0];
+            return bestTier;
+        }
+
+        function generateCycletteQuest() {
+            const randomCardio = CYCLETTE_POOL[Math.floor(Math.random() * CYCLETTE_POOL.length)];
+            let target = Math.floor(randomCardio.base + (player.level * randomCardio.inc));
+            if (target > 45) target = 45;
+
+            dailyProgress.cyclette = {
+                name: randomCardio.name,
+                desc: randomCardio.desc,
+                target: target,
+                current: 0,
+                unit: "min",
+                done: false
+            };
         }
 
         function generateDailyQuest() {
@@ -529,39 +791,27 @@
                 const variant = getBestExerciseTier(type);
                 let quantity = Math.floor(variant.base + ((player.level - 1) * variant.inc)); 
                 dailyProgress.exercises[type] = {
-                    name: variant.name, target: quantity, current: 0,
-                    unit: variant.unit || "reps", done: false
+                    name: variant.name,
+                    desc: variant.desc,
+                    target: quantity, 
+                    current: 0,
+                    unit: variant.unit, 
+                    done: false
                 };
             }
-            if (Math.random() < 0.35) {
+            if (Math.random() < 0.40) { 
                 const randomQuest = BONUS_MISSIONS[Math.floor(Math.random() * BONUS_MISSIONS.length)];
-                dailyProgress.bonusQuest = { text: randomQuest, done: false };
+                dailyProgress.bonusQuest = { text: randomQuest.text, desc: randomQuest.desc, done: false };
             } else {
                 dailyProgress.bonusQuest = null;
             }
+            generateCycletteQuest();
         }
 
-        // --- V3 BRIBE SYSTEM ---
-        function bribeSystem() {
-            if (player.xp >= 50) {
-                playSound(sfxClick);
-                player.xp -= 50;
-                player.penaltyActive = false;
-                // Preveniamo che il sistema scatti in rosso al ricaricamento
-                dailyProgress.date = new Date().toDateString();
-                saveData();
-                showToast("-50 XP. Riattivazione Sistema forzata.");
-                setTimeout(() => location.reload(), 1500);
-            } else {
-                alert("Non hai abbastanza XP (minimo 50). Fai la respirazione di 60 secondi, è facile!");
-            }
-        }
-
-        // --- V3 PENALTY (REHAB) ---
-        let penaltySeconds = 60; // Abbassato da 180 a 60 secondi
+        let penaltySeconds = 60; // Penalty morbida come in V3
         function startPenaltyTimer() {
+            playSound(sfxClick);
             document.getElementById('start-penalty-btn').disabled = true;
-            document.getElementById('bribe-btn').disabled = true;
             const timerEl = document.getElementById('penalty-timer');
             const interval = setInterval(() => {
                 penaltySeconds--;
@@ -570,7 +820,8 @@
                 timerEl.innerText = `${m}:${s}`;
                 if(penaltySeconds<=0) {
                     clearInterval(interval);
-                    showToast("Riabilitazione Neurale completata.");
+                    playSound(sfxLevelUp);
+                    showToast("Riabilitazione completata.");
                     player.penaltyActive = false;
                     saveData();
                     setTimeout(() => location.reload(), 1500);
@@ -578,7 +829,6 @@
             }, 1000);
         }
 
-        // --- UI RENDERING ---
         function renderUI() {
             document.getElementById('level-display').innerText = player.level;
             document.getElementById('str-val').innerText = player.stats.str;
@@ -588,13 +838,12 @@
             
             const xpPercent = Math.min(100, (player.xp / player.xpToNext) * 100);
             document.getElementById('xp-bar').style.width = `${xpPercent}%`;
-            document.getElementById('xp-text').innerText = `${Math.floor(player.xp)} / ${player.xpToNext}`;
 
             const titleEl = document.getElementById('player-title');
-            if (player.level < 15) titleEl.innerText = "Principiante (D-Rank)";
-            else if (player.level < 30) titleEl.innerText = "Cacciatore (C-Rank)";
-            else if (player.level < 50) titleEl.innerText = "Elite (B-Rank)";
-            else titleEl.innerText = "Monarca (S-Rank)";
+            if (player.level < 15) titleEl.innerText = "D-Rank (Principiante)";
+            else if (player.level < 30) titleEl.innerText = "C-Rank (Cacciatore)";
+            else if (player.level < 50) titleEl.innerText = "B-Rank (Elite)";
+            else titleEl.innerText = "S-Rank (Monarca)";
 
             const ptsContainer = document.getElementById('stat-points-container');
             const statBtns = document.querySelectorAll('.stat-btn');
@@ -615,9 +864,18 @@
                 const bonusPanel = document.getElementById('bonus-quest-panel');
                 if (dailyProgress.bonusQuest && !dailyProgress.bonusQuest.done && !dailyProgress.completed) {
                     bonusPanel.classList.remove('hidden');
-                    document.getElementById('bonus-quest-desc').innerText = dailyProgress.bonusQuest.text;
+                    document.getElementById('bonus-quest-desc').innerText = `"${dailyProgress.bonusQuest.text}"`;
+                    document.getElementById('bonus-info-btn').onclick = () => showInfo('Quest Nascosta', dailyProgress.bonusQuest.desc);
                 } else {
                     bonusPanel.classList.add('hidden');
+                }
+
+                const cardioPanel = document.getElementById('cardio-panel');
+                if (dailyProgress.cyclette && !dailyProgress.completed) {
+                    cardioPanel.classList.remove('hidden');
+                    renderCyclette();
+                } else {
+                    cardioPanel.classList.add('hidden');
                 }
 
                 if (dailyProgress.completed) {
@@ -633,6 +891,47 @@
             }
         }
 
+        function renderCyclette() {
+            const container = document.getElementById('cardio-content');
+            const data = dailyProgress.cyclette;
+            if(data.done) {
+                container.innerHTML = `<div class="text-center font-bold text-lg uppercase tracking-wider" style="color: var(--sl-fire); text-shadow: 0 0 10px var(--sl-fire)"><i class="fas fa-check-circle"></i> Addestramento Completato</div>`;
+                return;
+            }
+
+            if (activeKey === 'cyclette') {
+                container.innerHTML = `
+                    <div class="timer-active-box flex-col sm:flex-row gap-3 mb-2" style="background-color: rgba(255, 69, 0, 0.05); border-color: var(--sl-fire);">
+                        <div class="flex items-center gap-3 w-full sm:w-auto">
+                            <i class="fas fa-dumbbell text-2xl" style="color: var(--sl-fire)"></i>
+                            <span class="font-bold text-white text-lg tracking-wide">${data.name}</span>
+                        </div>
+                        <div class="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
+                            <span id="timer-text-cyclette" class="font-mono text-xl font-black" style="color: var(--sl-fire)">Prep: 3s</span>
+                            <button onclick="stopExerciseTimer()" class="px-4 py-2 border border-red-500 bg-red-900/30 rounded font-bold text-red-500 hover:bg-red-800 transition-colors"><i class="fas fa-stop"></i></button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="flex justify-between items-center mb-4 relative z-10">
+                    <div class="flex items-center gap-4">
+                        <i class="fas fa-info-circle info-btn text-2xl" onclick="showInfo('${data.name}', '${data.desc.replace(/'/g, "\\'")}')"></i>
+                        <div>
+                            <span class="font-bold text-white block text-lg tracking-wide leading-tight">${data.name}</span>
+                        </div>
+                    </div>
+                    <span class="font-mono text-xl font-black text-white ml-2 whitespace-nowrap">${data.target} <span class="text-xs font-sans text-gray-500 font-bold uppercase">${data.unit}</span></span>
+                </div>
+                <div class="flex gap-2 justify-end w-full">
+                    <button onclick="startExerciseTimer('cyclette', true)" class="w-full py-2 border border-[#30363d] rounded font-bold hover:bg-[#161b22] hover:text-white transition-colors text-md" style="color: var(--sl-fire)"><i class="fas fa-play mr-2"></i> INIZIA TIMER</button>
+                    <button onclick="forceCompleteExercise('cyclette', true)" class="px-4 py-2 border border-[#30363d] rounded text-gray-400 hover:bg-[#161b22] hover:text-white transition-colors" title="Segna Completato"><i class="fas fa-check"></i></button>
+                </div>
+            `;
+        }
+
         function renderQuestList() {
             const list = document.getElementById('quest-list');
             list.innerHTML = '';
@@ -641,61 +940,71 @@
             for (let key in dailyProgress.exercises) {
                 const data = dailyProgress.exercises[key];
                 if (!data.done) allDone = false;
-                const percent = Math.min(100, (data.current / data.target) * 100);
-                const iconClass = ICONS[key];
+                const iconClass = ICONS[key] || "fa-star";
                 
                 const item = document.createElement('div');
-                item.className = "bg-gray-800 bg-opacity-50 p-3 border border-gray-700 rounded relative overflow-hidden";
-                item.innerHTML = `
-                    <div class="flex justify-between items-center mb-2 relative z-10">
-                        <div class="flex items-center gap-3">
-                            <i class="fas ${iconClass} text-blue-400 w-6 text-center"></i>
-                            <div>
-                                <span class="font-semibold text-gray-200 block text-md md:text-lg leading-tight">${data.name}</span>
+                item.className = "bg-[#0d1117] p-5 border border-[#30363d] rounded shadow-[0_0_10px_rgba(0,0,0,0.5)] mb-4 relative overflow-hidden";
+                
+                if (activeKey === key) {
+                    item.innerHTML = `
+                        <div class="timer-active-box flex-col sm:flex-row gap-3">
+                            <div class="flex items-center gap-3 w-full sm:w-auto">
+                                <i class="fas ${iconClass} text-2xl" style="color: var(--sl-glow)"></i>
+                                <span class="font-bold text-white text-lg tracking-wide leading-tight">${data.name}</span>
+                            </div>
+                            <div class="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
+                                <span id="timer-text-${key}" class="font-mono text-xl font-black" style="color: var(--sl-glow)">Prep: 3s</span>
+                                <button onclick="stopExerciseTimer()" class="px-4 py-2 border border-red-500 bg-red-900/30 rounded font-bold text-red-500 hover:bg-red-800 transition-colors"><i class="fas fa-stop"></i></button>
                             </div>
                         </div>
-                        <span class="text-blue-300 font-mono text-lg whitespace-nowrap ml-2">${data.current} / ${data.target} <span class="text-xs">${data.unit}</span></span>
-                    </div>
-                    <div class="absolute bottom-0 left-0 h-1 bg-gray-700 w-full z-0">
-                        <div class="h-full bg-blue-500 transition-all duration-300" style="width: ${percent}%"></div>
-                    </div>
-                    <div class="flex gap-2 mt-2 relative z-10 justify-end">
-                        <button onclick="updateExercise('${key}', -1)" class="px-3 py-1 border border-gray-600 rounded hover:bg-gray-700">-</button>
-                        <button onclick="updateExercise('${key}', 1)" class="px-3 py-1 border border-gray-600 rounded hover:bg-gray-700">+1</button>
-                        <button onclick="updateExercise('${key}', 5)" class="px-3 py-1 border border-gray-600 rounded hover:bg-gray-700">+5</button>
-                        <button onclick="updateExercise('${key}', ${data.target})" class="px-3 py-1 border border-blue-600 text-blue-400 rounded hover:bg-blue-900 ml-2"><i class="fas fa-check"></i></button>
-                    </div>
-                `;
+                    `;
+                } 
+                else {
+                    let isTimeBased = data.unit.includes("sec") || data.unit.includes("min");
+                    
+                    let actionArea = "";
+                    if (data.done) {
+                        actionArea = `<div class="text-right w-full font-bold uppercase tracking-wider" style="color: var(--sl-glow)"><i class="fas fa-check-circle"></i> Fatto</div>`;
+                    } else if (isTimeBased) {
+                        actionArea = `
+                            <button onclick="startExerciseTimer('${key}', false)" class="flex-1 py-2 border border-[#30363d] rounded font-bold hover:bg-[#161b22] transition-colors text-md" style="color: var(--sl-glow)"><i class="fas fa-play mr-2"></i> INIZIA TIMER</button>
+                            <button onclick="forceCompleteExercise('${key}', false)" class="px-4 py-2 border border-[#30363d] rounded text-gray-400 hover:bg-[#161b22] hover:text-white transition-colors" title="Segna Completato"><i class="fas fa-check"></i></button>
+                        `;
+                    } else {
+                        actionArea = `
+                            <button onclick="forceCompleteExercise('${key}', false)" class="w-full py-2 border border-[#30363d] rounded font-bold hover:bg-[#161b22] hover:text-white transition-colors text-md tracking-wider uppercase" style="color: var(--sl-glow); background-color: transparent;"><i class="fas fa-check mr-2"></i> Segna Completato</button>
+                        `;
+                    }
+
+                    item.innerHTML = `
+                        <div class="flex justify-between items-center mb-4 relative z-10">
+                            <div class="flex items-center gap-4">
+                                <i class="fas fa-info-circle info-btn text-2xl" onclick="showInfo('${data.name}', '${data.desc.replace(/'/g, "\\'")}')"></i>
+                                <div>
+                                    <span class="font-bold text-[#00f0ff] block text-lg pr-2 leading-tight tracking-wide" style="text-shadow: 0 0 5px rgba(0,240,255,0.5)">${data.name}</span>
+                                </div>
+                            </div>
+                            <span class="font-mono text-xl font-black text-white ml-2 whitespace-nowrap">${data.target} <span class="text-xs font-sans text-gray-500 font-bold uppercase">${data.unit}</span></span>
+                        </div>
+                        <div class="flex gap-2 w-full mt-2 relative z-10">
+                            ${actionArea}
+                        </div>
+                    `;
+                }
                 list.appendChild(item);
             }
 
             const completeBtn = document.getElementById('complete-quest-btn');
-            completeBtn.disabled = !allDone;
+            completeBtn.disabled = !allDone || activeKey !== null; 
             if (allDone) {
-                completeBtn.classList.add('animate-pulse');
-                completeBtn.style.borderColor = '#00f0ff';
-                completeBtn.style.boxShadow = '0 0 20px #00f0ff';
+                completeBtn.style.backgroundColor = "var(--sl-glow)";
+                completeBtn.style.color = "#000";
+                completeBtn.style.boxShadow = "0 0 20px var(--sl-glow)";
             } else {
-                completeBtn.classList.remove('animate-pulse');
-                completeBtn.style.borderColor = '';
-                completeBtn.style.boxShadow = '';
+                completeBtn.style.backgroundColor = "transparent";
+                completeBtn.style.color = "var(--sl-glow)";
+                completeBtn.style.boxShadow = "none";
             }
-        }
-
-        function updateExercise(key, amount) {
-            playSound(sfxClick);
-            const data = dailyProgress.exercises[key];
-            if (amount === data.target) data.current = data.target;
-            else data.current += amount;
-            
-            if (data.current < 0) data.current = 0;
-            if (data.current >= data.target) {
-                data.current = data.target;
-                data.done = true;
-            } else data.done = false;
-            
-            saveData();
-            renderUI();
         }
 
         function completeBonusQuest() {
@@ -704,7 +1013,8 @@
                 dailyProgress.bonusQuest.done = true;
                 const bonusXp = Math.floor(15 + (player.level * 2));
                 player.xp += bonusXp;
-                showToast(`Quest Nascosta completata! +${bonusXp} XP`);
+                playSound(sfxCrit);
+                showToast(`Quest Completata! +${bonusXp} XP`, "var(--sl-purple)");
                 saveData();
                 renderUI();
             }
@@ -712,6 +1022,7 @@
 
         function finishDailyQuest() {
             dailyProgress.completed = true;
+            playSound(sfxLevelUp);
             
             const critChance = 5 + (player.stats.sen * 0.5);
             const isCrit = Math.random() * 100 < critChance;
@@ -719,10 +1030,8 @@
             let xpGain = Math.floor(20 + (player.level * 8)); 
             if (isCrit) {
                 xpGain *= 2;
-                playSound(sfxCrit);
                 document.getElementById('crit-badge').classList.remove('hidden');
             } else {
-                playSound(sfxLevelUp);
                 document.getElementById('crit-badge').classList.add('hidden');
             }
 
@@ -745,6 +1054,7 @@
         }
 
         function closeModal() {
+            playSound(sfxClick);
             document.getElementById('reward-modal').classList.remove('active');
             location.reload(); 
         }
@@ -769,7 +1079,7 @@
                 const h = Math.floor(diff/(1000*60*60));
                 const m = Math.floor((diff%(1000*60*60))/(1000*60));
                 const el = document.getElementById('countdown');
-                if(el) el.innerText = `Prossima Quest: ${h}h ${m}m`;
+                if(el) el.innerText = `NUOVA QUEST TRA: ${h}H ${m}M`;
             }, 60000);
         }
 
