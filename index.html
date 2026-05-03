@@ -118,7 +118,7 @@
         function showToast(message, color = "var(--sl-glow)") { const container = document.getElementById('toast-container'); const toast = document.createElement('div'); toast.className = 'toast'; toast.style.borderLeft = `4px solid ${color}`; toast.innerHTML = `<i class="fas fa-info-circle mr-3" style="color: ${color}"></i> ${message}`; container.appendChild(toast); setTimeout(() => { toast.remove(); }, 3500); }
 
         const STORAGE_PLAYER = 'sl_v2_player'; 
-        const STORAGE_DAILY = 'sl_v2_5_daily'; 
+        const STORAGE_DAILY = 'sl_v2_6_daily'; 
 
         let player = { name: "CACCIATORE", level: 1, xp: 0, xpToNext: 100, stats: { str: 10, agi: 10, vit: 10, sen: 10 }, statPoints: 0, penaltyActive: false };
         let dailyProgress = { date: null, completed: false, exercises: {}, bonusQuest: null, cyclette: null };
