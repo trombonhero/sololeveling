@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE SYSTEM - V4 Power & Timer</title>
+    <title>THE SYSTEM - V2.5 Glute & Back Safe</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -46,186 +46,64 @@
             letter-spacing: 2px;
         }
 
-        .stat-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid #30363d;
-        }
-
-        .glow-text {
-            color: var(--sl-glow);
-            text-shadow: 0 0 8px var(--sl-glow);
-            font-weight: 800;
-        }
+        .stat-row { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid #30363d; }
+        .glow-text { color: var(--sl-glow); text-shadow: 0 0 8px var(--sl-glow); font-weight: 800; }
 
         .btn-system {
-            background: transparent;
-            border: 1px solid var(--sl-glow);
-            color: var(--sl-glow);
-            text-transform: uppercase;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            box-shadow: 0 0 5px rgba(0, 240, 255, 0.2);
-            border-radius: 4px;
+            background: transparent; border: 1px solid var(--sl-glow); color: var(--sl-glow);
+            text-transform: uppercase; font-weight: bold; transition: all 0.3s ease;
+            cursor: pointer; box-shadow: 0 0 5px rgba(0, 240, 255, 0.2); border-radius: 4px;
         }
 
-        .btn-system:hover:not(:disabled) {
-            background: var(--sl-glow);
-            color: #000;
-            box-shadow: 0 0 20px var(--sl-glow);
-        }
+        .btn-system:hover:not(:disabled) { background: var(--sl-glow); color: #000; box-shadow: 0 0 20px var(--sl-glow); }
+        .btn-system:disabled { border-color: #555; color: #555; cursor: not-allowed; box-shadow: none; }
 
-        .btn-system:disabled {
-            border-color: #555;
-            color: #555;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
+        .info-btn { color: #888; transition: color 0.2s, text-shadow 0.2s; cursor: pointer; }
+        .info-btn:hover { color: var(--sl-glow); text-shadow: 0 0 8px var(--sl-glow); }
 
-        .info-btn {
-            color: #888;
-            transition: color 0.2s, text-shadow 0.2s;
-            cursor: pointer;
-        }
-        .info-btn:hover {
-            color: var(--sl-glow);
-            text-shadow: 0 0 8px var(--sl-glow);
-        }
+        .hidden-quest-panel { border-color: var(--sl-purple) !important; box-shadow: 0 0 15px rgba(176, 38, 255, 0.15) !important; }
+        .hidden-quest-header { color: var(--sl-purple) !important; text-shadow: 0 0 10px var(--sl-purple) !important; border-bottom-color: var(--sl-purple) !important; }
 
-        /* Quest Bonus */
-        .hidden-quest-panel {
-            border-color: var(--sl-purple) !important;
-            box-shadow: 0 0 15px rgba(176, 38, 255, 0.15) !important;
-        }
-        .hidden-quest-header {
-            color: var(--sl-purple) !important;
-            text-shadow: 0 0 10px var(--sl-purple) !important;
-            border-bottom-color: var(--sl-purple) !important;
-        }
+        .cardio-panel { border: 1px dashed var(--sl-fire) !important; box-shadow: 0 0 15px rgba(255, 69, 0, 0.1) !important; }
+        .cardio-header { color: var(--sl-fire) !important; text-shadow: 0 0 10px var(--sl-fire) !important; border-bottom: none; }
 
-        /* Cyclette */
-        .cardio-panel {
-            border: 1px dashed var(--sl-fire) !important;
-            box-shadow: 0 0 15px rgba(255, 69, 0, 0.1) !important;
-        }
-        .cardio-header {
-            color: var(--sl-fire) !important;
-            text-shadow: 0 0 10px var(--sl-fire) !important;
-            border-bottom: none;
-        }
+        .penalty-mode { border-color: var(--sl-red) !important; box-shadow: 0 0 30px rgba(255, 51, 51, 0.3) !important; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 15px rgba(255,51,51,0.2); } 50% { box-shadow: 0 0 35px rgba(255,51,51,0.5); } 100% { box-shadow: 0 0 15px rgba(255,51,51,0.2); } }
+        
+        .penalty-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(20, 0, 0, 0.95); z-index: 50; display: flex; justify-content: center; align-items: center; flex-direction: column; }
 
-        /* Penalty Rehab */
-        .penalty-mode {
-            border-color: var(--sl-red) !important;
-            box-shadow: 0 0 30px rgba(255, 51, 51, 0.3) !important;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0% { box-shadow: 0 0 15px rgba(255,51,51,0.2); }
-            50% { box-shadow: 0 0 35px rgba(255,51,51,0.5); }
-            100% { box-shadow: 0 0 15px rgba(255,51,51,0.2); }
-        }
-        .penalty-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(20, 0, 0, 0.95);
-            z-index: 50;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-
-        .modal-overlay {
-            background: rgba(0, 0, 0, 0.85);
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 60;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
-            backdrop-filter: blur(3px);
-        }
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-        .system-alert {
-            background: rgba(13, 17, 23, 0.95);
-            border: 2px solid var(--sl-glow);
-            border-radius: 8px;
-            max-width: 90%;
-            width: 420px;
-            padding: 2rem;
-            text-align: center;
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.15);
-        }
+        .modal-overlay { background: rgba(0, 0, 0, 0.85); position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 60; opacity: 0; pointer-events: none; transition: opacity 0.3s; backdrop-filter: blur(3px); }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+        .system-alert { background: rgba(13, 17, 23, 0.95); border: 2px solid var(--sl-glow); border-radius: 8px; max-width: 90%; width: 420px; padding: 2rem; text-align: center; box-shadow: 0 0 30px rgba(0, 240, 255, 0.15); }
 
         .progress-fill { background: var(--sl-glow); box-shadow: 0 0 10px var(--sl-glow); }
         .progress-fire { background: var(--sl-fire); box-shadow: 0 0 10px var(--sl-fire); }
         .progress-bg { background: #222; }
 
         #toast-container { position: fixed; top: 20px; right: 20px; z-index: 100; }
-        .toast {
-            background: rgba(13, 17, 23, 0.95);
-            border: 1px solid var(--sl-glow);
-            color: #fff;
-            padding: 1rem 1.5rem;
-            margin-bottom: 0.5rem;
-            border-radius: 4px;
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
-            animation: slideIn 0.3s forwards;
-            font-weight: 600;
-        }
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
+        .toast { background: rgba(13, 17, 23, 0.95); border: 1px solid var(--sl-glow); color: #fff; padding: 1rem 1.5rem; margin-bottom: 0.5rem; border-radius: 4px; box-shadow: 0 0 15px rgba(0, 240, 255, 0.2); animation: slideIn 0.3s forwards; font-weight: 600; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
         .hidden { display: none !important; }
         .stat-desc { font-size: 0.75rem; color: #888; display: block; margin-top: 2px; }
 
-        /* Timer attivo */
-        .timer-active-box {
-            background-color: rgba(0, 240, 255, 0.05);
-            border: 1px solid var(--sl-glow);
-            border-radius: 6px;
-            padding: 0.75rem 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.1);
-        }
+        .timer-active-box { background-color: rgba(0, 240, 255, 0.05); border: 1px solid var(--sl-glow); border-radius: 6px; padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center; width: 100%; box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.1); }
     </style>
 </head>
 <body class="p-4 md:p-8 flex flex-col items-center">
 
-    <!-- AUDIO -->
     <audio id="sfx-level-up" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
     <audio id="sfx-click" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
     <audio id="sfx-crit" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"></audio>
-    
-    <!-- Nuovi Suoni Timer -->
     <audio id="sfx-tick" src="https://assets.mixkit.co/active_storage/sfx/2569/2569-preview.mp3"></audio> 
     <audio id="sfx-start-chime" src="https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3"></audio> 
 
     <div id="toast-container"></div>
 
-    <!-- Navigazione Top -->
     <div class="w-full max-w-2xl flex justify-between items-center mb-4 text-xs font-bold text-gray-400">
-        <div>
-            <button onclick="toggleSettings()" class="hover:text-white px-3 py-1 border border-gray-700 rounded bg-[#161b22] transition-colors"><i class="fas fa-cog"></i> SISTEMA</button>
-        </div>
+        <div><button onclick="toggleSettings()" class="hover:text-white px-3 py-1 border border-gray-700 rounded bg-[#161b22] transition-colors"><i class="fas fa-cog"></i> SISTEMA</button></div>
     </div>
 
-    <!-- Impostazioni -->
     <div id="settings-panel" class="w-full max-w-2xl system-panel p-5 mb-4 hidden">
         <h2 class="text-lg text-[#00f0ff] border-b border-[#30363d] mb-4 pb-2 font-bold">Gestione Dati Cacciatore</h2>
         <div class="flex flex-col gap-4">
@@ -240,7 +118,6 @@
 
     <div id="main-container" class="w-full max-w-2xl transition-all duration-500">
         
-        <!-- Status Principale -->
         <div class="system-panel p-6 mb-6 relative">
             <h1 class="text-2xl font-black tracking-widest text-center text-[#00f0ff] mb-6">STATUS UTENTE</h1>
             
@@ -313,7 +190,6 @@
             </div>
         </div>
 
-        <!-- Quest Nascosta -->
         <div id="bonus-quest-panel" class="system-panel p-4 mb-6 hidden-quest-panel hidden">
             <div class="system-header hidden-quest-header flex justify-between items-center text-sm border-none mb-0 pb-2">
                 <span><i class="fas fa-exclamation-triangle"></i> QUEST DI EMERGENZA</span>
@@ -330,34 +206,21 @@
             </div>
         </div>
 
-        <!-- Cyclette Cardio (Focus Potenziamento) -->
         <div id="cardio-panel" class="system-panel cardio-panel p-4 mb-6">
             <div class="system-header cardio-header flex justify-between items-center text-sm">
                 <span><i class="fas fa-dumbbell"></i> FORGIA DELLE GAMBE (CYCLETTE)</span>
                 <span class="text-xs px-2 py-1 rounded font-bold bg-red-900/30 text-red-400 border border-red-500/50">FACOLTATIVO</span>
             </div>
-            <div id="cardio-content" class="mt-3">
-                <!-- Populated by JS -->
-            </div>
+            <div id="cardio-content" class="mt-3"></div>
         </div>
 
-        <!-- Pratica Quotidiana -->
         <div id="quest-panel" class="system-panel p-6">
-            <div class="system-header flex justify-between items-center">
-                <span>QUEST GIORNALIERA</span>
-            </div>
-
-            <div class="space-y-4" id="quest-list">
-                <!-- Populated by JS -->
-            </div>
-
+            <div class="system-header flex justify-between items-center"><span>QUEST GIORNALIERA</span></div>
+            <div class="space-y-4" id="quest-list"></div>
             <div id="quest-status-area" class="mt-8 text-center">
-                <button id="complete-quest-btn" onclick="finishDailyQuest()" class="btn-system w-full py-4 text-xl tracking-widest rounded" disabled>
-                    COMPLETA QUEST
-                </button>
+                <button id="complete-quest-btn" onclick="finishDailyQuest()" class="btn-system w-full py-4 text-xl tracking-widest rounded" disabled>COMPLETA QUEST</button>
                 <div class="text-xs text-gray-500 mt-4 uppercase tracking-widest font-bold">La costanza forgia l'arma.</div>
             </div>
-            
             <div id="quest-completed-msg" class="hidden text-center py-10">
                 <i class="fas fa-check-circle text-5xl mb-4 text-[#00f0ff]" style="filter: drop-shadow(0 0 10px #00f0ff)"></i>
                 <h3 class="text-3xl text-white font-black mb-2 uppercase tracking-widest">QUEST COMPLETATA</h3>
@@ -367,21 +230,17 @@
         </div>
     </div>
 
-    <!-- Penalità (Riabilitazione Neurale) -->
+    <!-- Penalità -->
     <div id="penalty-overlay" class="hidden penalty-overlay">
         <div class="system-panel p-8 max-w-lg w-full border-red-600 text-center penalty-mode">
             <h1 class="text-4xl font-bold text-red-600 mb-4 tracking-widest">CONNESSIONE PERSA</h1>
             <p class="text-gray-300 font-bold mb-6">Nessun problema, ripartiamo da qui. Il Sistema richiede riallineamento.</p>
-            
             <div class="bg-red-950/30 p-6 border border-red-500/50 mb-6 rounded">
                 <h3 class="text-2xl font-black text-red-500 mb-3 uppercase">Riabilitazione</h3>
                 <p class="text-sm text-gray-400 mb-5 font-bold">Chiudi gli occhi. Fai 10 respiri profondi lenti (inspira dal naso, espira dalla bocca).</p>
                 <div class="text-6xl font-black font-mono my-2 text-red-500" style="text-shadow: 0 0 10px #ff0000;" id="penalty-timer">01:00</div>
             </div>
-            
-            <button onclick="startPenaltyTimer()" id="start-penalty-btn" class="btn-system w-full py-4 text-xl font-black rounded hover:bg-red-900/50" style="border-color: var(--sl-red); color: var(--sl-red); box-shadow: 0 0 15px rgba(255,0,0,0.2)">
-                INIZIA RESPIRAZIONE
-            </button>
+            <button onclick="startPenaltyTimer()" id="start-penalty-btn" class="btn-system w-full py-4 text-xl font-black rounded hover:bg-red-900/50" style="border-color: var(--sl-red); color: var(--sl-red); box-shadow: 0 0 15px rgba(255,0,0,0.2)">INIZIA RESPIRAZIONE</button>
         </div>
     </div>
 
@@ -389,132 +248,103 @@
     <div id="reward-modal" class="modal-overlay">
         <div class="system-alert transform scale-95 transition-transform duration-200">
             <h2 class="text-3xl font-black text-[#00f0ff] mb-6 uppercase tracking-widest" style="text-shadow: 0 0 10px #00f0ff">LEVEL UP</h2>
-            <div id="crit-badge" class="hidden mb-4 text-yellow-400 font-bold border border-yellow-400/50 bg-yellow-900/20 px-3 py-1 rounded inline-block">
-                SINERGIA PERFETTA (Doppia XP)
-            </div>
+            <div id="crit-badge" class="hidden mb-4 text-yellow-400 font-bold border border-yellow-400/50 bg-yellow-900/20 px-3 py-1 rounded inline-block">SINERGIA PERFETTA (Doppia XP)</div>
             <div class="space-y-4 text-left mb-8 mt-2 font-bold text-gray-300">
-                <div class="flex justify-between border-b border-[#30363d] py-3">
-                    <span>Recupero Stato</span>
-                    <span class="text-green-400">Completo</span>
-                </div>
-                <div class="flex justify-between border-b border-[#30363d] py-3">
-                    <span>Punti Attributo</span>
-                    <span class="text-yellow-400">+3</span>
-                </div>
-                <div class="flex justify-between py-3">
-                    <span>Esperienza Acquisita</span>
-                    <span class="text-xl text-[#00f0ff]" id="xp-gain-display">+100</span>
-                </div>
+                <div class="flex justify-between border-b border-[#30363d] py-3"><span>Recupero Stato</span><span class="text-green-400">Completo</span></div>
+                <div class="flex justify-between border-b border-[#30363d] py-3"><span>Punti Attributo</span><span class="text-yellow-400">+3</span></div>
+                <div class="flex justify-between py-3"><span>Esperienza Acquisita</span><span class="text-xl text-[#00f0ff]" id="xp-gain-display">+100</span></div>
             </div>
             <button onclick="closeModal()" class="btn-system px-8 py-4 w-full text-xl font-black rounded">ACCETTA</button>
         </div>
     </div>
 
-    <!-- Modal Informazioni Esercizio -->
+    <!-- Info Modal -->
     <div id="info-modal" class="modal-overlay" onclick="if(event.target===this) closeInfoModal()">
         <div class="system-alert !p-6" style="border-radius: 8px;">
             <div class="flex items-center justify-center mb-4">
                 <i class="fas fa-book-open text-2xl mr-3" style="color: var(--sl-glow)"></i>
                 <h3 id="info-title" class="text-2xl font-black text-white uppercase tracking-widest">Titolo</h3>
             </div>
-            <div class="bg-[#000] border border-[#30363d] p-5 rounded text-left mb-6">
-                <p id="info-desc" class="text-gray-300 text-md leading-relaxed font-semibold">Descrizione</p>
-            </div>
+            <div class="bg-[#000] border border-[#30363d] p-5 rounded text-left mb-6"><p id="info-desc" class="text-gray-300 text-md leading-relaxed font-semibold">Descrizione</p></div>
             <button onclick="closeInfoModal()" class="btn-system w-full py-3 rounded tracking-widest">CHIUDI MANUALE</button>
         </div>
     </div>
 
     <script>
-        // --- AUDIO ---
         const sfxClick = document.getElementById('sfx-click');
         const sfxLevelUp = document.getElementById('sfx-level-up');
         const sfxCrit = document.getElementById('sfx-crit');
         const sfxTick = document.getElementById('sfx-tick');
         const sfxStartChime = document.getElementById('sfx-start-chime');
 
-        function playSound(sound) {
-            sound.currentTime = 0;
-            sound.play().catch(e => {});
-        }
+        function playSound(sound) { sound.currentTime = 0; sound.play().catch(e => {}); }
 
         function showToast(message, color = "var(--sl-glow)") {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.style.borderLeft = `4px solid ${color}`;
+            const container = document.getElementById('toast-container'); const toast = document.createElement('div');
+            toast.className = 'toast'; toast.style.borderLeft = `4px solid ${color}`;
             toast.innerHTML = `<i class="fas fa-info-circle mr-3" style="color: ${color}"></i> ${message}`;
-            container.appendChild(toast);
-            setTimeout(() => { toast.remove(); }, 3500);
+            container.appendChild(toast); setTimeout(() => { toast.remove(); }, 3500);
         }
 
-        // --- STATE AND STORAGE (CHIAVI ORIGINALI) ---
-        const STORAGE_PLAYER = 'sl_v2_player';
-        const STORAGE_DAILY = 'sl_v2_daily';
+        // LE CHIAVI DI SALVATAGGIO
+        const STORAGE_PLAYER = 'sl_v2_player'; // Manteniamo la tua vecchia per non perdere i punti
+        const STORAGE_DAILY = 'sl_v2_5_daily'; // Nuova chiave daily per triggerare i nuovi 5 Tiers
 
-        let player = {
-            name: "CACCIATORE", level: 1, xp: 0, xpToNext: 100, 
-            stats: { str: 10, agi: 10, vit: 10, sen: 10 },
-            statPoints: 0, penaltyActive: false
-        };
+        let player = { name: "CACCIATORE", level: 1, xp: 0, xpToNext: 100, stats: { str: 10, agi: 10, vit: 10, sen: 10 }, statPoints: 0, penaltyActive: false };
+        let dailyProgress = { date: null, completed: false, exercises: {}, bonusQuest: null, cyclette: null };
 
-        let dailyProgress = {
-            date: null, completed: false,
-            exercises: {}, bonusQuest: null, cyclette: null 
-        };
-
-        // --- EXERCISE DB (V3 REHAB + DESCRIZIONI E UNITA') ---
+        // I NUOVI 5 TIERS DALLA GUIDA V2.5
         const EXERCISE_TIERS = {
-            str: [ // Pushups
-                { name: "Piegamenti (Muro/Ginocchia)", req: 0, base: 5, inc: 0.2, unit: "reps", desc: "Spinta base. Tieni il core contratto per non inarcare la schiena." },
-                { name: "Piegamenti Classici", req: 60, base: 8, inc: 0.3, unit: "reps", desc: "Corpo in linea retta (Plank). Scendi fino a sfiorare terra col petto. Gomiti a 45 gradi." }, 
-                { name: "Piegamenti a Diamante", req: 120, base: 5, inc: 0.2, unit: "reps", desc: "Mani unite sotto il petto a formare un rombo. Gomiti stretti ai fianchi. Focus estremo tricipiti." },
-                { name: "Piegamenti Declinati", req: 180, base: 5, inc: 0.2, unit: "reps", desc: "Piedi rialzati su sedia/divano. Maggiore carico sul petto alto e spalle anteriori." }
+            str: [ 
+                { name: "Piegamenti (Muro/Ginocchia)", req: 0, base: 10, inc: 0.2, unit: "reps", desc: "Spinta base. Tieni il core contratto per non inarcare la schiena. Alt: Isometrici al muro." },
+                { name: "Piegamenti Classici", req: 60, base: 8, inc: 0.3, unit: "reps", desc: "Corpo in linea retta. Scendi fino a sfiorare terra. Non far cedere la zona lombare." }, 
+                { name: "Piegamenti a Diamante", req: 120, base: 6, inc: 0.2, unit: "reps", desc: "Mani unite a rombo sotto il petto. Focus estremo sui tricipiti." },
+                { name: "Piegamenti Declinati", req: 180, base: 5, inc: 0.2, unit: "reps", desc: "Piedi rialzati. Carico sulla parte alta del petto e spalle anteriori." },
+                { name: "Piegamenti Esplosivi", req: 250, base: 4, inc: 0.2, unit: "reps", desc: "Spinta brutale. Le mani devono staccarsi da terra." }
             ],
-            agi: [ // Squats (Glute-Safe)
-                { name: "Wall Sit (Sedia al Muro)", req: 0, base: 20, inc: 1.5, unit: "sec", desc: "Schiena appoggiata al muro, ginocchia a 90 gradi. Non usare i glutei, isola i quadricipiti." },
-                { name: "Calf Raises (Polpacci)", req: 50, base: 15, inc: 0.5, unit: "reps", desc: "Sollevati sulle punte dei piedi contraendo i polpacci al massimo. Discesa lenta." },
-                { name: "Step-Up (Gradino basso)", req: 100, base: 10, inc: 0.2, unit: "reps", desc: "Sali e scendi alternando le gambe su un gradino. Sforzo dinamico, nessun allungamento estremo." },
-                { name: "Wall Sit 1 Gamba", req: 150, base: 15, inc: 1, unit: "sec x gamba", desc: "Wall sit mantenendo tutto il peso su una sola gamba, stendendo l'altra in avanti." }
+            situps: [ // Questa chiave nel codice è usata per il CORE (ma scala con STR)
+                { name: "Crunch Brevi (Spalle)", req: 0, base: 12, inc: 0.3, unit: "reps", desc: "Solleva solo spalle. Bassa schiena incollata a terra. No tensione psoas." },
+                { name: "Plank sui Gomiti", req: 40, base: 30, inc: 1, unit: "sec", desc: "Se senti tensione ai lombari, alza leggermente il bacino verso l'alto." },
+                { name: "Dead Bug (Insetto Morto)", req: 90, base: 10, inc: 0.3, unit: "reps", desc: "Schiena INCOLLATA a terra. Distendi braccio e gamba opposti lentamente senza inarcare." },
+                { name: "Hollow Body Hold (Piegato)", req: 140, base: 20, inc: 1, unit: "sec", desc: "Spalle e gambe sollevate, ma ginocchia piegate verso il petto per salvare i lombari." },
+                { name: "L-Sit Progression / Plank Esteso", req: 200, base: 20, inc: 1, unit: "sec", desc: "Plank con le braccia distese molto più avanti delle spalle. Core d'acciaio." }
             ],
-            situps: [ // Core (Lombar Safe)
-                { name: "Crunch Brevi (Spalle alzate)", req: 0, base: 10, inc: 0.3, unit: "reps", desc: "Solleva solo le spalle dal pavimento contraendo l'addome. Bassa schiena incollata a terra." },
-                { name: "Plank sui Gomiti", req: 40, base: 20, inc: 1, unit: "sec", desc: "Corpo teso in linea. Se senti tensione ai lombari, alza leggermente il bacino." },
-                { name: "Dead Bug (Insetto Morto)", req: 90, base: 8, inc: 0.3, unit: "reps", desc: "Schiena incollata a terra. Distendi lentamente braccio e gamba opposti verso terra senza toccare." },
-                { name: "Hollow Body Hold", req: 140, base: 15, inc: 1, unit: "sec", desc: "Schiena a terra, solleva spalle e gambe. Tieni le ginocchia piegate verso il petto per sicurezza." }
+            agi: [ 
+                { name: "Wall Sit (Sedia al Muro)", req: 0, base: 30, inc: 1.5, unit: "sec", desc: "Schiena al muro, ginocchia a 90 gradi. Azzera il carico su glutei e schiena." },
+                { name: "Calf Raises (Polpacci)", req: 50, base: 20, inc: 0.5, unit: "reps", desc: "Sollevati sulle punte contraendo al massimo. Eccellente pompa venosa per il varicocele." },
+                { name: "Step-Up (Gradino basso)", req: 100, base: 15, inc: 0.3, unit: "reps x gamba", desc: "Sali e scendi alternando le gambe su un gradino basso. Sforzo dinamico leggero." },
+                { name: "Wall Sit 1 Gamba", req: 150, base: 15, inc: 1, unit: "sec x gamba", desc: "Wall sit mantenendo tutto il peso su una gamba. L'altra è distesa in avanti." },
+                { name: "Salti della Corda", req: 200, base: 1, inc: 0.1, unit: "min", desc: "Alti RPM, usa solo i polpacci per saltare, non piegare le ginocchia." }
             ],
-            vit: [ // Cardio
-                { name: "Shadow Boxing Leggero", req: 0, base: 1, inc: 0.05, unit: "min", desc: "Pugni all'aria, movimento fluido nello spazio. Concentrati sulla respirazione e riscaldamento." },
-                { name: "Corda (o simulata)", req: 60, base: 2, inc: 0.1, unit: "min", desc: "Saltelli leggeri sul posto muovendo i polsi. Tieni il ritmo costante." },
-                { name: "Shadow Boxing Intenso", req: 120, base: 3, inc: 0.1, unit: "min", desc: "Massima velocità. Inserisci finte, schivate e spostamenti rapidi. Simula un combattimento." }
+            vit: [ 
+                { name: "Shadow Boxing Leggero", req: 0, base: 2, inc: 0.1, unit: "min", desc: "Pugni all'aria, movimento fluido. Concentrati su respirazione e riscaldamento." },
+                { name: "Corda (o simulata)", req: 60, base: 3, inc: 0.1, unit: "min", desc: "Saltelli leggeri sul posto muovendo i polsi. Tieni il ritmo." },
+                { name: "Shadow Boxing Intenso", req: 120, base: 3, inc: 0.1, unit: "min", desc: "Massima velocità. Schivate, spostamenti, esplosività totale." }
             ],
-            sen: [ // Flexibility
-                { name: "Stretching Schiena & Gatto", req: 0, base: 3, inc: 0, unit: "min", desc: "A 4 zampe, alterna l'inarcamento della schiena (Mucca) e la spinta verso l'alto (Gatto)." },
-                { name: "Mobilità Articolare Totale", req: 80, base: 5, inc: 0, unit: "min", desc: "Rotazioni ampie di tutte le articolazioni (collo, spalle, polsi, bacino, caviglie)." }
+            sen: [ 
+                { name: "Stretching Schiena & Gatto", req: 0, base: 3, inc: 0, unit: "min", desc: "A 4 zampe, inarca la schiena (Mucca) e spingi in alto (Gatto). Decomprime i dischi." },
+                { name: "Mobilità Articolare Totale", req: 80, base: 5, inc: 0, unit: "min", desc: "Rotazioni ampie di collo, spalle, bacino e allungamenti profondi." }
             ]
         };
 
         const CYCLETTE_POOL = [
-            { name: "Pedalata di Potenza Base", base: 15, inc: 0.5, desc: "Resistenza medio-alta. Focus sulla spinta costante e sul reclutamento dei quadricipiti. Non conta la velocità, conta la forza impressa." },
-            { name: "Salita in Montagna", base: 20, inc: 0.5, desc: "Resistenza molto alta. Immagina una salita ripida. Movimento lento, pesante, che brucia i muscoli delle cosce. Tieni la schiena dritta." },
-            { name: "Sprint di Potenza (Intervalli)", base: 15, inc: 0.5, desc: "Resistenza altissima. 30 secondi spingendo con forza massima, seguiti da 60 secondi di recupero attivo leggero. Pura esplosività." }
+            { name: "Pedalata Brezza Leggera", base: 15, inc: 0.2, desc: "Resistenza minima (1-2). Ritmo costante. Drena la zona pelvica e scioglie le tensioni." },
+            { name: "Intervalli di Battaglia", base: 15, inc: 0.2, desc: "Resistenza minima. Alterna 1 min veloce a 1 min lentissimo. Allena il cuore e il fiato in sicurezza." },
+            { name: "Esplorazione Posturale", base: 12, inc: 0.2, desc: "Pedalata costante a resistenza 2. Ogni 3 min raddrizza la schiena e apri le braccia a croce per 30 sec." }
         ];
 
         const BONUS_MISSIONS = [
-            { text: "Bevi 2 bicchieri d'acqua adesso.", desc: "L'idratazione migliora le performance neurali e muscolari." },
-            { text: "Correggi la postura per 10 minuti.", desc: "Spalle indietro, petto in fuori. Elimina le tensioni da smartphone/PC." },
-            { text: "Stai in equilibrio su 1 gamba (1 min).", desc: "Migliora la propriocezione e rafforza i legamenti stabilizzatori." },
-            { text: "Fai 10 respiri diaframmatici profondi.", desc: "Inspira 4s gonfiando la pancia, trattieni 4s, espira 4s." }
+            { text: "L'Elisir: Bevi 2 bicchieri d'acqua ora.", desc: "L'idratazione migliora le performance neurali e muscolari." },
+            { text: "Allineamento: Correggi la postura da seduto.", desc: "Spalle indietro, petto in fuori. Elimina le tensioni da smartphone/PC." },
+            { text: "Focus Neurale: Equilibrio su 1 gamba (1 min).", desc: "Migliora la propriocezione e rafforza i legamenti stabilizzatori." },
+            { text: "Maestria dell'Aura: 10 respiri diaframmatici.", desc: "Inspira 4s gonfiando la pancia, trattieni 4s, espira 4s." },
+            { text: "Co-op: Pattugliamento di Coppia.", desc: "Camminata di 20 min con un alleato. Vietato l'uso dello smartphone." },
+            { text: "Co-op: Specchio della Fatica.", desc: "Sfida di Plank o Wall Sit vis-à-vis con un alleato. Chi crolla paga pegno." }
         ];
 
-        const ICONS = {
-            str: "fa-fist-raised", agi: "fa-bolt", situps: "fa-shield-alt", 
-            vit: "fa-running", sen: "fa-yin-yang"
-        };
+        const ICONS = { str: "fa-fist-raised", agi: "fa-bolt", situps: "fa-shield-alt", vit: "fa-running", sen: "fa-yin-yang" };
 
-        // --- TIMER LOGIC (Per-Esercizio) ---
-        let activeInterval = null;
-        let activeKey = null; 
-        let timerState = {};
+        let activeInterval = null; let activeKey = null; let timerState = {};
 
         function formatTime(secs) {
             const m = Math.floor(secs / 60).toString().padStart(2, '0');
@@ -525,320 +355,136 @@
         function startExerciseTimer(key, isCyclette = false) {
             if (activeInterval) return showToast("Attenzione: Completa l'esercizio in corso.", "var(--sl-fire)");
             playSound(sfxClick);
-
             let data = isCyclette ? dailyProgress.cyclette : dailyProgress.exercises[key];
             let isMinutes = data.unit.includes("min");
             let isTwoSided = data.unit.includes("lato") || data.unit.includes("gamba");
             let targetSecs = isMinutes ? data.target * 60 : data.target;
 
-            timerState = {
-                key: key,
-                isCyclette: isCyclette,
-                phase: 'prep1', 
-                timeLeft: 3, 
-                targetSecs: targetSecs,
-                isTwoSided: isTwoSided
-            };
-
-            activeKey = key;
-            renderUI(); 
-            activeInterval = setInterval(() => tickTimer(), 1000);
+            timerState = { key: key, isCyclette: isCyclette, phase: 'prep1', timeLeft: 3, targetSecs: targetSecs, isTwoSided: isTwoSided };
+            activeKey = key; renderUI(); activeInterval = setInterval(() => tickTimer(), 1000);
         }
 
         function tickTimer() {
             timerState.timeLeft--;
-
-            if (timerState.timeLeft > 0 && timerState.timeLeft <= 3 && timerState.phase.includes('prep')) {
-                 playSound(sfxTick);
-            }
-
+            if (timerState.timeLeft > 0 && timerState.timeLeft <= 3 && timerState.phase.includes('prep')) { playSound(sfxTick); }
             if (timerState.timeLeft <= 0) {
-                if (timerState.phase === 'prep1') {
-                    playSound(sfxStartChime); 
-                    timerState.phase = 'run1';
-                    timerState.timeLeft = timerState.targetSecs;
-                } else if (timerState.phase === 'run1') {
-                    if (timerState.isTwoSided) {
-                        playSound(sfxStartChime); 
-                        timerState.phase = 'prep2';
-                        timerState.timeLeft = 3;
-                    } else {
-                        finishExerciseTimer();
-                        return;
-                    }
-                } else if (timerState.phase === 'prep2') {
-                    playSound(sfxStartChime); 
-                    timerState.phase = 'run2';
-                    timerState.timeLeft = timerState.targetSecs;
-                } else if (timerState.phase === 'run2') {
-                    finishExerciseTimer();
-                    return;
-                }
+                if (timerState.phase === 'prep1') { playSound(sfxStartChime); timerState.phase = 'run1'; timerState.timeLeft = timerState.targetSecs; } 
+                else if (timerState.phase === 'run1') {
+                    if (timerState.isTwoSided) { playSound(sfxStartChime); timerState.phase = 'prep2'; timerState.timeLeft = 3; } 
+                    else { finishExerciseTimer(); return; }
+                } else if (timerState.phase === 'prep2') { playSound(sfxStartChime); timerState.phase = 'run2'; timerState.timeLeft = timerState.targetSecs; } 
+                else if (timerState.phase === 'run2') { finishExerciseTimer(); return; }
             }
             updateActiveTimerUI();
         }
 
         function updateActiveTimerUI() {
-            let display = document.getElementById(`timer-text-${activeKey}`);
-            let progress = document.getElementById(`timer-bar-${activeKey}`);
+            let display = document.getElementById(`timer-text-${activeKey}`); let progress = document.getElementById(`timer-bar-${activeKey}`);
             if (!display) return;
-
-            let text = "";
-            let pct = 0;
-
-            if(timerState.phase === 'prep1') {
-                text = `PREPARATI: ${timerState.timeLeft}s`;
-                pct = 0;
-            } else if(timerState.phase === 'run1' && timerState.isTwoSided) {
-                text = `LATO 1: ${formatTime(timerState.timeLeft)}`;
-                pct = 100 - ((timerState.timeLeft / timerState.targetSecs) * 100);
-            } else if(timerState.phase === 'run1' && !timerState.isTwoSided) {
-                text = `TEMPO: ${formatTime(timerState.timeLeft)}`;
-                pct = 100 - ((timerState.timeLeft / timerState.targetSecs) * 100);
-            } else if(timerState.phase === 'prep2') {
-                text = `CAMBIO LATO: ${timerState.timeLeft}s`;
-                pct = 0;
-                display.style.color = "var(--sl-fire)"; 
-            } else if(timerState.phase === 'run2') {
-                text = `LATO 2: ${formatTime(timerState.timeLeft)}`;
-                pct = 100 - ((timerState.timeLeft / timerState.targetSecs) * 100);
-                display.style.color = "var(--sl-glow)";
-            }
-
-            display.innerText = text;
-            if(progress) progress.style.width = `${pct}%`;
+            let text = ""; let pct = 0;
+            if(timerState.phase === 'prep1') { text = `PREPARATI: ${timerState.timeLeft}s`; pct = 0; } 
+            else if(timerState.phase === 'run1' && timerState.isTwoSided) { text = `LATO 1: ${formatTime(timerState.timeLeft)}`; pct = 100 - ((timerState.timeLeft / timerState.targetSecs) * 100); } 
+            else if(timerState.phase === 'run1' && !timerState.isTwoSided) { text = `TEMPO: ${formatTime(timerState.timeLeft)}`; pct = 100 - ((timerState.timeLeft / timerState.targetSecs) * 100); } 
+            else if(timerState.phase === 'prep2') { text = `CAMBIO LATO: ${timerState.timeLeft}s`; pct = 0; display.style.color = "var(--sl-fire)"; } 
+            else if(timerState.phase === 'run2') { text = `LATO 2: ${formatTime(timerState.timeLeft)}`; pct = 100 - ((timerState.timeLeft / timerState.targetSecs) * 100); display.style.color = "var(--sl-glow)"; }
+            display.innerText = text; if(progress) progress.style.width = `${pct}%`;
         }
 
-        function stopExerciseTimer() {
-            playSound(sfxClick);
-            clearInterval(activeInterval);
-            activeInterval = null;
-            activeKey = null;
-            renderUI(); 
-        }
+        function stopExerciseTimer() { playSound(sfxClick); clearInterval(activeInterval); activeInterval = null; activeKey = null; renderUI(); }
 
         function finishExerciseTimer() {
-            clearInterval(activeInterval);
-            activeInterval = null;
-            let keyToComplete = activeKey;
-            let wasCyclette = timerState.isCyclette;
-            activeKey = null;
-            
-            playSound(sfxStartChime); 
-            
+            clearInterval(activeInterval); activeInterval = null;
+            let keyToComplete = activeKey; let wasCyclette = timerState.isCyclette; activeKey = null; playSound(sfxStartChime); 
             if (wasCyclette) {
-                let d = dailyProgress.cyclette;
-                d.current = d.target;
-                d.done = true;
-                const cardioXp = Math.floor(40 + (player.level * 5));
-                player.xp += cardioXp;
-                showToast(`Forgia Completata! +${cardioXp} XP`, "var(--sl-fire)");
-            } else {
-                let d = dailyProgress.exercises[keyToComplete];
-                d.current = d.target;
-                d.done = true;
-            }
-            saveData();
-            renderUI();
+                let d = dailyProgress.cyclette; d.current = d.target; d.done = true;
+                const cardioXp = Math.floor(40 + (player.level * 5)); player.xp += cardioXp; showToast(`Forgia Completata! +${cardioXp} XP`, "var(--sl-fire)");
+            } else { let d = dailyProgress.exercises[keyToComplete]; d.current = d.target; d.done = true; }
+            saveData(); renderUI();
         }
 
         function forceCompleteExercise(key, isCyclette = false) {
             playSound(sfxClick);
             if (isCyclette) {
-                let d = dailyProgress.cyclette;
-                d.current = d.target;
-                d.done = true;
-                const cardioXp = Math.floor(40 + (player.level * 5));
-                player.xp += cardioXp;
-                showToast(`Forgia Completata! +${cardioXp} XP`, "var(--sl-fire)");
-            } else {
-                let d = dailyProgress.exercises[key];
-                d.current = d.target;
-                d.done = true;
-            }
-            saveData();
-            renderUI();
+                let d = dailyProgress.cyclette; d.current = d.target; d.done = true;
+                const cardioXp = Math.floor(40 + (player.level * 5)); player.xp += cardioXp; showToast(`Forgia Completata! +${cardioXp} XP`, "var(--sl-fire)");
+            } else { let d = dailyProgress.exercises[key]; d.current = d.target; d.done = true; }
+            saveData(); renderUI();
         }
 
-        // --- INFO MODAL ---
-        function showInfo(title, desc) {
-            playSound(sfxClick);
-            document.getElementById('info-title').innerText = title;
-            document.getElementById('info-desc').innerHTML = desc;
-            document.getElementById('info-modal').classList.add('active');
-        }
+        function showInfo(title, desc) { playSound(sfxClick); document.getElementById('info-title').innerText = title; document.getElementById('info-desc').innerHTML = desc; document.getElementById('info-modal').classList.add('active'); }
+        function closeInfoModal() { playSound(sfxClick); document.getElementById('info-modal').classList.remove('active'); }
 
-        function closeInfoModal() {
-            playSound(sfxClick);
-            document.getElementById('info-modal').classList.remove('active');
-        }
-
-        // --- INIZIALIZZAZIONE ---
-        function init() {
-            loadData();
-            checkDateLogic();
-            renderUI();
-        }
-
-        function toggleSettings() {
-            playSound(sfxClick);
-            document.getElementById('settings-panel').classList.toggle('hidden');
-        }
-
-        function saveData() {
-            localStorage.setItem(STORAGE_PLAYER, JSON.stringify(player));
-            localStorage.setItem(STORAGE_DAILY, JSON.stringify(dailyProgress));
-        }
-
+        function init() { loadData(); checkDateLogic(); renderUI(); }
+        function toggleSettings() { playSound(sfxClick); document.getElementById('settings-panel').classList.toggle('hidden'); }
+        function saveData() { localStorage.setItem(STORAGE_PLAYER, JSON.stringify(player)); localStorage.setItem(STORAGE_DAILY, JSON.stringify(dailyProgress)); }
+        
         function loadData() {
-            const savedPlayer = localStorage.getItem(STORAGE_PLAYER);
-            const savedDaily = localStorage.getItem(STORAGE_DAILY);
-            if (savedPlayer) player = JSON.parse(savedPlayer);
-            if (savedDaily) dailyProgress = JSON.parse(savedDaily);
-
+            const savedPlayer = localStorage.getItem(STORAGE_PLAYER); const savedDaily = localStorage.getItem(STORAGE_DAILY);
+            if (savedPlayer) player = JSON.parse(savedPlayer); if (savedDaily) dailyProgress = JSON.parse(savedDaily);
             let needsSave = false;
-
-            // PATCH: Controlla se è un vecchio salvataggio incompatibile e forza la rigenerazione
-            if (dailyProgress && dailyProgress.exercises) {
-                const firstKey = Object.keys(dailyProgress.exercises)[0];
-                if (firstKey && dailyProgress.exercises[firstKey] && dailyProgress.exercises[firstKey].desc === undefined) {
-                    generateDailyQuest();
-                    needsSave = true;
-                }
-            }
-
-            if(dailyProgress && !dailyProgress.cyclette && !dailyProgress.completed) {
-                generateCycletteQuest();
-                needsSave = true; 
-            }
-
+            // Se la missione è vuota o vecchia, rigenera
+            if (!dailyProgress.exercises || Object.keys(dailyProgress.exercises).length === 0) { generateDailyQuest(); needsSave = true; }
+            if(dailyProgress && !dailyProgress.cyclette && !dailyProgress.completed) { generateCycletteQuest(); needsSave = true; }
             if(needsSave) saveData();
         }
 
         function exportData() {
-            playSound(sfxClick);
-            const data = { player, dailyProgress };
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
-            const downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "solo_leveling_backup.json");
-            document.body.appendChild(downloadAnchorNode);
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
-            showToast("Backup salvato.");
+            playSound(sfxClick); const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ player, dailyProgress }));
+            const dl = document.createElement('a'); dl.setAttribute("href", dataStr); dl.setAttribute("download", "solo_leveling_v25_backup.json"); document.body.appendChild(dl); dl.click(); dl.remove();
         }
 
         function importData(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
+            const file = event.target.files[0]; if (!file) return; const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const data = JSON.parse(e.target.result);
-                    if (data.player && data.player.level) {
-                        player = data.player;
-                        if(data.dailyProgress) dailyProgress = data.dailyProgress;
-                        saveData();
-                        playSound(sfxLevelUp);
-                        showToast("Sistema ripristinato.");
-                        setTimeout(() => location.reload(), 1500);
-                    } else showToast("File corrotto.", "var(--sl-red)");
+                    if (data.player && data.player.level) { player = data.player; if(data.dailyProgress) dailyProgress = data.dailyProgress; saveData(); playSound(sfxLevelUp); location.reload(); }
                 } catch (err) { showToast("Errore I/O.", "var(--sl-red)"); }
-            };
-            reader.readAsText(file);
+            }; reader.readAsText(file);
         }
 
         function checkDateLogic() {
             const today = new Date().toDateString();
-            if (!dailyProgress.date) {
-                dailyProgress.date = today;
-                generateDailyQuest();
-                saveData(); 
-                return;
-            }
+            if (!dailyProgress.date) { dailyProgress.date = today; generateDailyQuest(); saveData(); return; }
             if (dailyProgress.date !== today) {
-                if (!dailyProgress.completed && !player.penaltyActive) {
-                    player.penaltyActive = true;
-                }
-                dailyProgress.date = today;
-                dailyProgress.completed = false;
-                if(activeInterval) stopExerciseTimer();
-                generateDailyQuest();
-                saveData();
+                if (!dailyProgress.completed && !player.penaltyActive) player.penaltyActive = true;
+                dailyProgress.date = today; dailyProgress.completed = false; if(activeInterval) stopExerciseTimer();
+                generateDailyQuest(); saveData();
             }
         }
 
         function getBestExerciseTier(type) {
-            // Nota: per i core, la key in app è 'situps' ma la statistica da controllare è sempre 'str'
-            let reqStatKey = type === 'situps' ? 'str' : type; 
-            const tiers = EXERCISE_TIERS[type];
-            let bestTier = tiers[0];
-            
-            for (let i = tiers.length - 1; i >= 0; i--) {
-                if (player.stats[reqStatKey] >= tiers[i].req) {
-                    bestTier = tiers[i];
-                    break;
-                }
-            }
+            let reqStatKey = type === 'situps' ? 'str' : type; const tiers = EXERCISE_TIERS[type]; let bestTier = tiers[0];
+            for (let i = tiers.length - 1; i >= 0; i--) { if (player.stats[reqStatKey] >= tiers[i].req) { bestTier = tiers[i]; break; } }
             return bestTier;
         }
 
         function generateCycletteQuest() {
             const randomCardio = CYCLETTE_POOL[Math.floor(Math.random() * CYCLETTE_POOL.length)];
-            let target = Math.floor(randomCardio.base + (player.level * randomCardio.inc));
-            if (target > 45) target = 45;
-
-            dailyProgress.cyclette = {
-                name: randomCardio.name,
-                desc: randomCardio.desc,
-                target: target,
-                current: 0,
-                unit: "min",
-                done: false
-            };
+            let target = Math.floor(randomCardio.base + (player.level * randomCardio.inc)); if (target > 45) target = 45;
+            dailyProgress.cyclette = { name: randomCardio.name, desc: randomCardio.desc, target: target, current: 0, unit: "min", done: false };
         }
 
         function generateDailyQuest() {
             dailyProgress.exercises = {};
             for (let type in EXERCISE_TIERS) {
-                const variant = getBestExerciseTier(type);
-                let quantity = Math.floor(variant.base + ((player.level - 1) * variant.inc)); 
-                dailyProgress.exercises[type] = {
-                    name: variant.name,
-                    desc: variant.desc,
-                    target: quantity, 
-                    current: 0,
-                    unit: variant.unit, 
-                    done: false
-                };
+                const variant = getBestExerciseTier(type); let quantity = Math.floor(variant.base + ((player.level - 1) * variant.inc)); 
+                dailyProgress.exercises[type] = { name: variant.name, desc: variant.desc, target: quantity, current: 0, unit: variant.unit, done: false };
             }
             if (Math.random() < 0.40) { 
                 const randomQuest = BONUS_MISSIONS[Math.floor(Math.random() * BONUS_MISSIONS.length)];
                 dailyProgress.bonusQuest = { text: randomQuest.text, desc: randomQuest.desc, done: false };
-            } else {
-                dailyProgress.bonusQuest = null;
-            }
+            } else { dailyProgress.bonusQuest = null; }
             generateCycletteQuest();
         }
 
-        let penaltySeconds = 60; // Penalty morbida come in V3
+        let penaltySeconds = 60;
         function startPenaltyTimer() {
-            playSound(sfxClick);
-            document.getElementById('start-penalty-btn').disabled = true;
-            const timerEl = document.getElementById('penalty-timer');
+            playSound(sfxClick); document.getElementById('start-penalty-btn').disabled = true; const timerEl = document.getElementById('penalty-timer');
             const interval = setInterval(() => {
-                penaltySeconds--;
-                const m = Math.floor(penaltySeconds/60).toString().padStart(2,'0');
-                const s = (penaltySeconds%60).toString().padStart(2,'0');
+                penaltySeconds--; const m = Math.floor(penaltySeconds/60).toString().padStart(2,'0'); const s = (penaltySeconds%60).toString().padStart(2,'0');
                 timerEl.innerText = `${m}:${s}`;
-                if(penaltySeconds<=0) {
-                    clearInterval(interval);
-                    playSound(sfxLevelUp);
-                    showToast("Riabilitazione completata.");
-                    player.penaltyActive = false;
-                    saveData();
-                    setTimeout(() => location.reload(), 1500);
-                }
+                if(penaltySeconds<=0) { clearInterval(interval); playSound(sfxLevelUp); player.penaltyActive = false; saveData(); location.reload(); }
             }, 1000);
         }
 
@@ -858,255 +504,119 @@
             else if (player.level < 50) titleEl.innerText = "B-Rank (Elite)";
             else titleEl.innerText = "S-Rank (Monarca)";
 
-            const ptsContainer = document.getElementById('stat-points-container');
-            const statBtns = document.querySelectorAll('.stat-btn');
-            if (player.statPoints > 0) {
-                ptsContainer.classList.remove('hidden');
-                document.getElementById('stat-points').innerText = player.statPoints;
-                statBtns.forEach(btn => btn.classList.remove('hidden'));
-            } else {
-                ptsContainer.classList.add('hidden');
-                statBtns.forEach(btn => btn.classList.add('hidden'));
-            }
+            const ptsContainer = document.getElementById('stat-points-container'); const statBtns = document.querySelectorAll('.stat-btn');
+            if (player.statPoints > 0) { ptsContainer.classList.remove('hidden'); document.getElementById('stat-points').innerText = player.statPoints; statBtns.forEach(btn => btn.classList.remove('hidden')); } 
+            else { ptsContainer.classList.add('hidden'); statBtns.forEach(btn => btn.classList.add('hidden')); }
 
-            if (player.penaltyActive) {
-                document.getElementById('penalty-overlay').classList.remove('hidden');
-            } else {
+            if (player.penaltyActive) { document.getElementById('penalty-overlay').classList.remove('hidden'); } 
+            else {
                 document.getElementById('penalty-overlay').classList.add('hidden');
-                
                 const bonusPanel = document.getElementById('bonus-quest-panel');
                 if (dailyProgress.bonusQuest && !dailyProgress.bonusQuest.done && !dailyProgress.completed) {
-                    bonusPanel.classList.remove('hidden');
-                    document.getElementById('bonus-quest-desc').innerText = `"${dailyProgress.bonusQuest.text}"`;
-                    // PATCH: Evita errori se la descrizione bonus manca
+                    bonusPanel.classList.remove('hidden'); document.getElementById('bonus-quest-desc').innerText = `"${dailyProgress.bonusQuest.text}"`;
                     const safeDesc = dailyProgress.bonusQuest.desc ? dailyProgress.bonusQuest.desc.replace(/'/g, "\\'") : "";
                     document.getElementById('bonus-info-btn').onclick = () => showInfo('Quest Nascosta', safeDesc);
-                } else {
-                    bonusPanel.classList.add('hidden');
-                }
+                } else { bonusPanel.classList.add('hidden'); }
 
                 const cardioPanel = document.getElementById('cardio-panel');
-                if (dailyProgress.cyclette && !dailyProgress.completed) {
-                    cardioPanel.classList.remove('hidden');
-                    renderCyclette();
-                } else {
-                    cardioPanel.classList.add('hidden');
-                }
+                if (dailyProgress.cyclette && !dailyProgress.completed) { cardioPanel.classList.remove('hidden'); renderCyclette(); } 
+                else { cardioPanel.classList.add('hidden'); }
 
                 if (dailyProgress.completed) {
-                    document.getElementById('quest-list').classList.add('hidden');
-                    document.getElementById('quest-status-area').classList.add('hidden');
-                    document.getElementById('quest-completed-msg').classList.remove('hidden');
+                    document.getElementById('quest-list').classList.add('hidden'); document.getElementById('quest-status-area').classList.add('hidden'); document.getElementById('quest-completed-msg').classList.remove('hidden');
                 } else {
-                    document.getElementById('quest-list').classList.remove('hidden');
-                    document.getElementById('quest-status-area').classList.remove('hidden');
-                    document.getElementById('quest-completed-msg').classList.add('hidden');
-                    renderQuestList();
+                    document.getElementById('quest-list').classList.remove('hidden'); document.getElementById('quest-status-area').classList.remove('hidden'); document.getElementById('quest-completed-msg').classList.add('hidden'); renderQuestList();
                 }
             }
         }
 
         function renderCyclette() {
-            const container = document.getElementById('cardio-content');
-            const data = dailyProgress.cyclette;
-            if(data.done) {
-                container.innerHTML = `<div class="text-center font-bold text-lg uppercase tracking-wider" style="color: var(--sl-fire); text-shadow: 0 0 10px var(--sl-fire)"><i class="fas fa-check-circle"></i> Addestramento Completato</div>`;
-                return;
-            }
-
+            const container = document.getElementById('cardio-content'); const data = dailyProgress.cyclette;
+            if(data.done) { container.innerHTML = `<div class="text-center font-bold text-lg uppercase tracking-wider" style="color: var(--sl-fire); text-shadow: 0 0 10px var(--sl-fire)"><i class="fas fa-check-circle"></i> Addestramento Completato</div>`; return; }
             const safeDesc = data.desc ? data.desc.replace(/'/g, "\\'") : "";
-
             if (activeKey === 'cyclette') {
                 container.innerHTML = `
                     <div class="timer-active-box flex-col sm:flex-row gap-3 mb-2" style="background-color: rgba(255, 69, 0, 0.05); border-color: var(--sl-fire);">
-                        <div class="flex items-center gap-3 w-full sm:w-auto">
-                            <i class="fas fa-dumbbell text-2xl" style="color: var(--sl-fire)"></i>
-                            <span class="font-bold text-white text-lg tracking-wide">${data.name}</span>
-                        </div>
+                        <div class="flex items-center gap-3 w-full sm:w-auto"><i class="fas fa-dumbbell text-2xl" style="color: var(--sl-fire)"></i><span class="font-bold text-white text-lg tracking-wide">${data.name}</span></div>
                         <div class="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
                             <span id="timer-text-cyclette" class="font-mono text-xl font-black" style="color: var(--sl-fire)">Prep: 3s</span>
                             <button onclick="stopExerciseTimer()" class="px-4 py-2 border border-red-500 bg-red-900/30 rounded font-bold text-red-500 hover:bg-red-800 transition-colors"><i class="fas fa-stop"></i></button>
                         </div>
                     </div>
-                    <div class="h-1 progress-bg w-full rounded overflow-hidden">
-                        <div id="timer-bar-cyclette" class="h-full progress-fire transition-all duration-1000" style="width: 0%;"></div>
-                    </div>
-                `;
-                return;
+                    <div class="h-1 progress-bg w-full rounded overflow-hidden"><div id="timer-bar-cyclette" class="h-full progress-fire transition-all duration-1000" style="width: 0%;"></div></div>
+                `; return;
             }
-
             container.innerHTML = `
                 <div class="flex justify-between items-center mb-4 relative z-10">
-                    <div class="flex items-center gap-4">
-                        <i class="fas fa-info-circle info-btn text-2xl" onclick="showInfo('${data.name}', '${safeDesc}')"></i>
-                        <div>
-                            <span class="font-bold text-white block text-lg tracking-wide leading-tight">${data.name}</span>
-                        </div>
-                    </div>
+                    <div class="flex items-center gap-4"><i class="fas fa-info-circle info-btn text-2xl" onclick="showInfo('${data.name}', '${safeDesc}')"></i><div><span class="font-bold text-white block text-lg tracking-wide leading-tight">${data.name}</span></div></div>
                     <span class="font-mono text-xl font-black text-white ml-2 whitespace-nowrap">${data.target} <span class="text-xs font-sans text-gray-500 font-bold uppercase">${data.unit}</span></span>
                 </div>
                 <div class="flex gap-2 justify-end w-full">
                     <button onclick="startExerciseTimer('cyclette', true)" class="w-full py-2 border border-[#30363d] rounded font-bold hover:bg-[#161b22] hover:text-white transition-colors text-md" style="color: var(--sl-fire)"><i class="fas fa-play mr-2"></i> INIZIA TIMER</button>
-                    <button onclick="forceCompleteExercise('cyclette', true)" class="px-4 py-2 border border-[#30363d] rounded text-gray-400 hover:bg-[#161b22] hover:text-white transition-colors" title="Segna Completato"><i class="fas fa-check"></i></button>
+                    <button onclick="forceCompleteExercise('cyclette', true)" class="px-4 py-2 border border-[#30363d] rounded text-gray-400 hover:bg-[#161b22] hover:text-white transition-colors"><i class="fas fa-check"></i></button>
                 </div>
             `;
         }
 
         function renderQuestList() {
-            const list = document.getElementById('quest-list');
-            list.innerHTML = '';
-            let allDone = true;
-
+            const list = document.getElementById('quest-list'); list.innerHTML = ''; let allDone = true;
             for (let key in dailyProgress.exercises) {
-                const data = dailyProgress.exercises[key];
-                if (!data.done) allDone = false;
-                const iconClass = ICONS[key] || "fa-star";
-                const safeDesc = data.desc ? data.desc.replace(/'/g, "\\'") : "";
-                
-                const item = document.createElement('div');
-                item.className = "bg-[#0d1117] p-5 border border-[#30363d] rounded shadow-[0_0_10px_rgba(0,0,0,0.5)] mb-4 relative overflow-hidden";
+                const data = dailyProgress.exercises[key]; if (!data.done) allDone = false;
+                const iconClass = ICONS[key] || "fa-star"; const safeDesc = data.desc ? data.desc.replace(/'/g, "\\'") : "";
+                const item = document.createElement('div'); item.className = "bg-[#0d1117] p-5 border border-[#30363d] rounded shadow-[0_0_10px_rgba(0,0,0,0.5)] mb-4 relative overflow-hidden";
                 
                 if (activeKey === key) {
                     item.innerHTML = `
                         <div class="timer-active-box flex-col sm:flex-row gap-3">
-                            <div class="flex items-center gap-3 w-full sm:w-auto">
-                                <i class="fas ${iconClass} text-2xl" style="color: var(--sl-glow)"></i>
-                                <span class="font-bold text-white text-lg tracking-wide leading-tight">${data.name}</span>
-                            </div>
+                            <div class="flex items-center gap-3 w-full sm:w-auto"><i class="fas ${iconClass} text-2xl" style="color: var(--sl-glow)"></i><span class="font-bold text-white text-lg tracking-wide leading-tight">${data.name}</span></div>
                             <div class="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
                                 <span id="timer-text-${key}" class="font-mono text-xl font-black" style="color: var(--sl-glow)">Prep: 3s</span>
                                 <button onclick="stopExerciseTimer()" class="px-4 py-2 border border-red-500 bg-red-900/30 rounded font-bold text-red-500 hover:bg-red-800 transition-colors"><i class="fas fa-stop"></i></button>
                             </div>
                         </div>
-                        <div class="absolute bottom-0 left-0 h-1 progress-bg w-full z-0">
-                            <div id="timer-bar-${key}" class="h-full transition-all duration-1000 progress-fill" style="width: 0%;"></div>
-                        </div>
+                        <div class="absolute bottom-0 left-0 h-1 progress-bg w-full z-0"><div id="timer-bar-${key}" class="h-full transition-all duration-1000 progress-fill" style="width: 0%;"></div></div>
                     `;
-                } 
-                else {
-                    let isTimeBased = data.unit.includes("sec") || data.unit.includes("min");
-                    
-                    let actionArea = "";
-                    if (data.done) {
-                        actionArea = `<div class="text-right w-full font-bold uppercase tracking-wider" style="color: var(--sl-glow)"><i class="fas fa-check-circle"></i> Fatto</div>`;
-                    } else if (isTimeBased) {
-                        actionArea = `
-                            <button onclick="startExerciseTimer('${key}', false)" class="flex-1 py-2 border border-[#30363d] rounded font-bold hover:bg-[#161b22] transition-colors text-md" style="color: var(--sl-glow)"><i class="fas fa-play mr-2"></i> INIZIA TIMER</button>
-                            <button onclick="forceCompleteExercise('${key}', false)" class="px-4 py-2 border border-[#30363d] rounded text-gray-400 hover:bg-[#161b22] hover:text-white transition-colors" title="Segna Completato"><i class="fas fa-check"></i></button>
-                        `;
-                    } else {
-                        actionArea = `
-                            <button onclick="forceCompleteExercise('${key}', false)" class="w-full py-2 border border-[#30363d] rounded font-bold hover:bg-[#161b22] hover:text-white transition-colors text-md tracking-wider uppercase" style="color: var(--sl-glow); background-color: transparent;"><i class="fas fa-check mr-2"></i> Segna Completato</button>
-                        `;
-                    }
+                } else {
+                    let isTimeBased = data.unit.includes("sec") || data.unit.includes("min"); let actionArea = "";
+                    if (data.done) { actionArea = `<div class="text-right w-full font-bold uppercase tracking-wider" style="color: var(--sl-glow)"><i class="fas fa-check-circle"></i> Fatto</div>`; } 
+                    else if (isTimeBased) { actionArea = `<button onclick="startExerciseTimer('${key}', false)" class="flex-1 py-2 border border-[#30363d] rounded font-bold hover:bg-[#161b22] transition-colors text-md" style="color: var(--sl-glow)"><i class="fas fa-play mr-2"></i> INIZIA TIMER</button><button onclick="forceCompleteExercise('${key}', false)" class="px-4 py-2 border border-[#30363d] rounded text-gray-400 hover:bg-[#161b22] hover:text-white transition-colors"><i class="fas fa-check"></i></button>`; } 
+                    else { actionArea = `<button onclick="forceCompleteExercise('${key}', false)" class="w-full py-2 border border-[#30363d] rounded font-bold hover:bg-[#161b22] hover:text-white transition-colors text-md tracking-wider uppercase" style="color: var(--sl-glow); background-color: transparent;"><i class="fas fa-check mr-2"></i> Segna Completato</button>`; }
 
                     item.innerHTML = `
                         <div class="flex justify-between items-center mb-4 relative z-10">
-                            <div class="flex items-center gap-4">
-                                <i class="fas fa-info-circle info-btn text-2xl" onclick="showInfo('${data.name}', '${safeDesc}')"></i>
-                                <div>
-                                    <span class="font-bold text-[#00f0ff] block text-lg pr-2 leading-tight tracking-wide" style="text-shadow: 0 0 5px rgba(0,240,255,0.5)">${data.name}</span>
-                                </div>
-                            </div>
+                            <div class="flex items-center gap-4"><i class="fas fa-info-circle info-btn text-2xl" onclick="showInfo('${data.name}', '${safeDesc}')"></i><div><span class="font-bold text-[#00f0ff] block text-lg pr-2 leading-tight tracking-wide" style="text-shadow: 0 0 5px rgba(0,240,255,0.5)">${data.name}</span></div></div>
                             <span class="font-mono text-xl font-black text-white ml-2 whitespace-nowrap">${data.target} <span class="text-xs font-sans text-gray-500 font-bold uppercase">${data.unit}</span></span>
                         </div>
-                        <div class="flex gap-2 w-full mt-2 relative z-10">
-                            ${actionArea}
-                        </div>
+                        <div class="flex gap-2 w-full mt-2 relative z-10">${actionArea}</div>
                     `;
                 }
                 list.appendChild(item);
             }
-
-            const completeBtn = document.getElementById('complete-quest-btn');
-            completeBtn.disabled = !allDone || activeKey !== null; 
-            if (allDone) {
-                completeBtn.style.backgroundColor = "var(--sl-glow)";
-                completeBtn.style.color = "#000";
-                completeBtn.style.boxShadow = "0 0 20px var(--sl-glow)";
-            } else {
-                completeBtn.style.backgroundColor = "transparent";
-                completeBtn.style.color = "var(--sl-glow)";
-                completeBtn.style.boxShadow = "none";
-            }
+            const completeBtn = document.getElementById('complete-quest-btn'); completeBtn.disabled = !allDone || activeKey !== null; 
+            if (allDone) { completeBtn.style.backgroundColor = "var(--sl-glow)"; completeBtn.style.color = "#000"; completeBtn.style.boxShadow = "0 0 20px var(--sl-glow)"; } 
+            else { completeBtn.style.backgroundColor = "transparent"; completeBtn.style.color = "var(--sl-glow)"; completeBtn.style.boxShadow = "none"; }
         }
 
         function completeBonusQuest() {
             playSound(sfxClick);
             if(dailyProgress.bonusQuest) {
-                dailyProgress.bonusQuest.done = true;
-                const bonusXp = Math.floor(15 + (player.level * 2));
-                player.xp += bonusXp;
-                playSound(sfxCrit);
-                showToast(`Quest Completata! +${bonusXp} XP`, "var(--sl-purple)");
-                saveData();
-                renderUI();
+                dailyProgress.bonusQuest.done = true; const bonusXp = Math.floor(15 + (player.level * 2)); player.xp += bonusXp; playSound(sfxCrit); showToast(`Quest Completata! +${bonusXp} XP`, "var(--sl-purple)"); saveData(); renderUI();
             }
         }
 
         function finishDailyQuest() {
-            dailyProgress.completed = true;
-            playSound(sfxLevelUp);
-            
-            const critChance = 5 + (player.stats.sen * 0.5);
-            const isCrit = Math.random() * 100 < critChance;
-            
+            dailyProgress.completed = true; playSound(sfxLevelUp);
+            const critChance = 5 + (player.stats.sen * 0.5); const isCrit = Math.random() * 100 < critChance;
             let xpGain = Math.floor(20 + (player.level * 8)); 
-            if (isCrit) {
-                xpGain *= 2;
-                document.getElementById('crit-badge').classList.remove('hidden');
-            } else {
-                document.getElementById('crit-badge').classList.add('hidden');
-            }
-
-            player.xp += xpGain;
-            player.statPoints += 3;
-            
-            if (player.xp >= player.xpToNext) {
-                player.level++;
-                player.xp -= player.xpToNext;
-                player.xpToNext = Math.floor(player.xpToNext * 1.25);
-                player.stats.str++; player.stats.agi++;
-                player.stats.vit++; player.stats.sen++;
-            }
-
-            saveData();
-            renderUI();
-            
-            document.getElementById('xp-gain-display').innerText = `+${xpGain}`;
-            document.getElementById('reward-modal').classList.add('active');
+            if (isCrit) { xpGain *= 2; document.getElementById('crit-badge').classList.remove('hidden'); } else { document.getElementById('crit-badge').classList.add('hidden'); }
+            player.xp += xpGain; player.statPoints += 3;
+            if (player.xp >= player.xpToNext) { player.level++; player.xp -= player.xpToNext; player.xpToNext = Math.floor(player.xpToNext * 1.25); player.stats.str++; player.stats.agi++; player.stats.vit++; player.stats.sen++; }
+            saveData(); renderUI(); document.getElementById('xp-gain-display').innerText = `+${xpGain}`; document.getElementById('reward-modal').classList.add('active');
         }
 
-        function closeModal() {
-            playSound(sfxClick);
-            document.getElementById('reward-modal').classList.remove('active');
-            location.reload(); 
-        }
-
-        function addStat(stat) {
-            if (player.statPoints > 0) {
-                playSound(sfxClick);
-                player.stats[stat]++;
-                player.statPoints--;
-                saveData();
-                renderUI();
-            }
-        }
-
-        function startCountdownClock() {
-            setInterval(() => {
-                const now = new Date();
-                const tomorrow = new Date(now);
-                tomorrow.setDate(tomorrow.getDate() + 1);
-                tomorrow.setHours(0, 0, 0, 0);
-                const diff = tomorrow - now;
-                const h = Math.floor(diff/(1000*60*60));
-                const m = Math.floor((diff%(1000*60*60))/(1000*60));
-                const el = document.getElementById('countdown');
-                if(el) el.innerText = `NUOVA QUEST TRA: ${h}H ${m}M`;
-            }, 60000);
-        }
-
+        function closeModal() { playSound(sfxClick); document.getElementById('reward-modal').classList.remove('active'); location.reload(); }
+        function addStat(stat) { if (player.statPoints > 0) { playSound(sfxClick); player.stats[stat]++; player.statPoints--; saveData(); renderUI(); } }
+        
         init();
     </script>
 </body>
